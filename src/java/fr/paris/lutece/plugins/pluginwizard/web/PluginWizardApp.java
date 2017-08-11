@@ -46,6 +46,7 @@ import fr.paris.lutece.plugins.pluginwizard.business.model.Rest;
 import fr.paris.lutece.plugins.pluginwizard.service.MapperService;
 import fr.paris.lutece.plugins.pluginwizard.service.ModelService;
 import fr.paris.lutece.plugins.pluginwizard.service.generator.GeneratorService;
+import fr.paris.lutece.plugins.pluginwizard.util.Utils;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.BusinessClassFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.DescriptionFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.PluginNameFormBean;
@@ -64,13 +65,13 @@ import fr.paris.lutece.util.url.UrlItem;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 
@@ -215,6 +216,8 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     public static final String ERROR_PRIMARY_TYPE = "pluginwizard.error.attribute.primaryType";
     public static final String ERROR_DESCRIPTION_TYPE = "pluginwizard.error.attribute.descriptionType";
     public static final String ERROR_LOAD_PLUGIN = "pluginwizard.error.plugin.file";
+    public static final String ERROR_MODULE_NAME ="pluginwizard.error.module.name.pattern";
+    public static final String ERROR_PLUGIN_NAME ="pluginwizard.error.plugin.name.pattern";
 
     // NOTIFICATIONS
     public static final String INFO_SESSION_EXPIRED = "pluginwizard.info.sessionExpired";
@@ -418,7 +421,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     @Action( ACTION_DESCRIPTION_PREVIOUS )
     public XPage doDescritionPrevious( HttpServletRequest request )
     {
-        return doModifyPlugin( request, VIEW_MODIFY_PLUGIN );
+        return doModifyPlugin( request, VIEW_CREATE_PLUGIN );
     }
 
     /**
@@ -442,6 +445,26 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     private XPage doModifyPlugin( HttpServletRequest request, String strView )
     {
         populate( _description, request );
+        
+        if ( _description.getPluginName().contains( "-" ) ) 
+        {
+            if (!_description.getPluginName().matches("[a-z]*-[a-z]*") ) 
+            {
+        	addError(ERROR_MODULE_NAME,getLocale( request ));
+        	return redirectView( request, VIEW_MODIFY_DESCRIPTION );
+            }
+            _description.setModule(true);
+        } 
+        else 
+        {
+            if(!_description.getPluginName().matches("[a-z]*")){
+        	addError(ERROR_PLUGIN_NAME,getLocale( request ));
+        	return redirectView( request, VIEW_MODIFY_DESCRIPTION );
+            }
+            _description.setModule(false);
+        }
+        
+        
 
         if ( !validateBean( _description, getLocale( request ) ) )
         {
@@ -735,7 +758,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
      */
     private boolean validateTablePrefix( HttpServletRequest request, BusinessClassFormBean businessClass )
     {
-        String strTablePrefix = _strPluginName + "_";
+        String strTablePrefix = _strPluginName.replace("-", "_") + "_";
         boolean bValidate = businessClass.getBusinessTableName(  ).startsWith( strTablePrefix );
 
         if ( !bValidate )
@@ -848,6 +871,13 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     {
         int nBusinessClassId = Integer.parseInt( request.getParameter( PARAM_BUSINESS_CLASS_ID ) );
         populate( _attribute, request );
+        
+        if ( !validateBean( _attribute, getLocale( request ) ) )
+        {
+            return redirect( request, VIEW_CREATE_ATTRIBUTE, 
+                    PARAM_BUSINESS_CLASS_ID, nBusinessClassId, 
+                    PARAM_ATTRIBUTE_ID, _attribute.getId()  );
+        }
 
         ModelService.addAttribute( _nPluginId, nBusinessClassId, _attribute );
         _attribute = null;
@@ -871,6 +901,13 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         _attribute.setNotNull( false );
         populate( _attribute, request );
 
+        if ( !validateBean( _attribute, getLocale( request ) ) )            
+        {
+            return redirect( request, VIEW_MODIFY_ATTRIBUTE , 
+                    PARAM_BUSINESS_CLASS_ID, nBusinessClassId, 
+                    PARAM_ATTRIBUTE_ID, _attribute.getId() );
+        }
+        
         ModelService.updateAttribute( _nPluginId, nBusinessClassId, _attribute );
         _attribute = null;
         addInfo( INFO_ATTRIBUTE_UPDATED, getLocale( request ) );

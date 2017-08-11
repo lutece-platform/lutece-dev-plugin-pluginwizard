@@ -1,10 +1,10 @@
-<%@ page errorPage="../../ErrorPage.jsp" %>
 
-<jsp:include page="../../AdminHeader.jsp" />
+<%@ page errorPage="<#if is_Module>../../</#if>../../ErrorPage.jsp" %>
+<jsp:include page="<#if is_Module>../../</#if>../../AdminHeader.jsp" />
 
 <jsp:useBean id="${feature_name?lower_case}" scope="session" class="fr.paris.lutece.plugins.${plugin_name}.web.${feature_name}JspBean" />
 
 <% ${feature_name?lower_case}.init( request, ${feature_name?lower_case}.RIGHT_${feature_name?upper_case} ); %>
 <%= ${feature_name?lower_case}.get${feature_name}Home ( request ) %>
 
-<%@ include file="../../AdminFooter.jsp" %>
+<%@ include file="<#if is_Module>../../</#if>../../AdminFooter.jsp" %>

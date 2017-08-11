@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.pluginwizard.service.generator;
 
 import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Portlet;
+import fr.paris.lutece.plugins.pluginwizard.util.Utils;
 import fr.paris.lutece.portal.service.util.AppLogService;
 
 import java.util.HashMap;
@@ -67,7 +68,8 @@ public class PortletGenerator extends AbstractGenerator
     public Map generate( PluginModel pm )
     {
         HashMap map = new HashMap(  );
-
+        String strRadicalPackage = pm.getPluginNameAsRadicalPackage() ;
+                
         for ( Portlet portlet : pm.getPortlets(  ) )
         {
             for ( BusinessFileConfig file : _listFiles )
@@ -77,7 +79,7 @@ public class PortletGenerator extends AbstractGenerator
 
                 String strPath = getFilePath( pm, PATH, strPortletFile );
 
-                String strSourceCode = getPortletFile( portlet, pm.getPluginName(  ), file.getTemplate(  ) );
+                String strSourceCode = getPortletFile( portlet, pm.getPluginName(  ), file.getTemplate(  ), strRadicalPackage );
                 strSourceCode = strSourceCode.replace( "&lt;", "<" );
                 strSourceCode = strSourceCode.replace( "&gt;", ">" );
                 map.put( strPath, strSourceCode );
@@ -95,12 +97,14 @@ public class PortletGenerator extends AbstractGenerator
     * @param strPortletName The portlet name
     * @return The content of the portlet file
     */
-    private String getPortletFile( Portlet portlet, String strPluginName, String strTemplate )
+    private String getPortletFile( Portlet portlet, String strPluginName, String strTemplate, String strRadicalPackage )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
 
         model.put( Markers.MARK_PORTLET, portlet );
         model.put( Markers.MARK_PLUGIN_NAME, strPluginName );
+        model.put( Markers.MARK_RADICAL_PACKAGE, strRadicalPackage );
+        
         AppLogService.info( portlet );
 
         return build( strTemplate, model );

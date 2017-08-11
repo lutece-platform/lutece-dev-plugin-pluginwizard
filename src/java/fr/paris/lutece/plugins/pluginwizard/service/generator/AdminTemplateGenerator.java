@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.pluginwizard.business.model.BusinessClass;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Feature;
 import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.service.ModelService;
+import fr.paris.lutece.plugins.pluginwizard.util.Utils;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
@@ -65,6 +66,11 @@ public class AdminTemplateGenerator extends AbstractGenerator
     public Map generate( PluginModel pm )
     {
         HashMap map = new HashMap(  );
+        
+        String strPluginName = strPluginName = pm.getPluginNameAsPackage() ;
+        String strLink = pm.getPluginNameAsRadicalPath() ;
+        
+
 
         //for each feature,which business classes are attached to
         Collection<Feature> listFeatures = pm.getFeatures(  );
@@ -85,7 +91,7 @@ public class AdminTemplateGenerator extends AbstractGenerator
                             _template_prefix[i] + businessClass.getBusinessClass(  ).toLowerCase(  ) + strSuffix );
 
                     String strSourceCode = getCreateHtmlCode( listBusinessClasses, admin_feature, businessClass, i,
-                            pm.getPluginName(  ) );
+                    		strPluginName, strLink );
                     map.put( strPath, strSourceCode );
                 }
             }
@@ -93,7 +99,7 @@ public class AdminTemplateGenerator extends AbstractGenerator
             //Add the main template where all the business management interface will be accessible
             String strPath = getFilePath( pm, PATH, feature.getFeatureName(  ).toLowerCase(  ) + "_tabs.html" );
 
-            String strSourceCode = getTabsHtmlCode( listBusinessClasses, pm.getPluginName(  ), feature );
+            String strSourceCode = getTabsHtmlCode( listBusinessClasses, strPluginName, feature, strLink );
             map.put( strPath, strSourceCode );
         }
 
@@ -108,10 +114,11 @@ public class AdminTemplateGenerator extends AbstractGenerator
      * @param businessClass The instance of the business class
      * @param nTemplateType The type of template
      * @param strPluginName The plugin name
+     * @param strLinkJsp The link to jsp
      * @return The html code of the create template
      */
     private String getCreateHtmlCode( Collection<BusinessClass> listAllBusinessClasses, Feature admin_feature,
-        BusinessClass businessClass, int nTemplateType, String strPluginName )
+        BusinessClass businessClass, int nTemplateType, String strPluginName, String strLinkJsp )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
 
@@ -126,6 +133,7 @@ public class AdminTemplateGenerator extends AbstractGenerator
         model.put( Markers.MARK_LIST_BUSINESS_CLASSES, listAllBusinessClasses );
         model.put( Markers.MARK_ADMIN_FEATURE, admin_feature );
         model.put( Markers.MARK_INCLUDE, "@@include" );
+        model.put( Markers.MARK_LINK, strLinkJsp );
 
         model.put( Markers.MARK_TEMPLATE_TYPE, nTemplateType );
 
@@ -140,10 +148,11 @@ public class AdminTemplateGenerator extends AbstractGenerator
     * @param listAllBusinessClasses A list of business classes attached to plugin
     * @param strPluginName  The plugin name
     * @param feature The feature
+    * @param strLinkJsp The link to jsp
     * @return The html code of the create template
     */
     private String getTabsHtmlCode( Collection<BusinessClass> listAllBusinessClasses, String strPluginName,
-        Feature feature )
+        Feature feature, String strLinkJsp )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
 
@@ -157,6 +166,7 @@ public class AdminTemplateGenerator extends AbstractGenerator
         model.put( Markers.MARK_BRACKETS_CLOSE, "}" );
         model.put( Markers.MARK_MACRO_DEF, "@@macro" );
         model.put( Markers.MARK_LIST_BUSINESS_CLASSES, listAllBusinessClasses );
+        model.put( Markers.MARK_LINK, strLinkJsp );
 
         HtmlTemplate template = AppTemplateService.getTemplate( _strTabsTemplate, Locale.getDefault(  ), model );
 

@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.pluginwizard.service.generator;
 
 import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Portlet;
+import fr.paris.lutece.plugins.pluginwizard.util.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,7 @@ import java.util.Map;
  */
 public class PortletJspGenerator extends AbstractGenerator
 {
-    private static final String PATH = "webapp/jsp/admin/plugins/{plugin_name}/";
+    private static final String PATH = "webapp/jsp/admin/plugins/";
     private static final String EXT_JSP = ".jsp";
     private static String[] _prefix = { "Modify", "DoModify", "Create", "DoCreate" };
 
@@ -58,14 +59,17 @@ public class PortletJspGenerator extends AbstractGenerator
     public Map generate( PluginModel pm )
     {
         HashMap map = new HashMap(  );
+        String strPluginName = pm.getPluginNameAsRadicalPackage( ) ;
 
+        String _path = PATH + pm.getPluginNameAsRadicalPath( )  + "/" ;
+        
         for ( Portlet portlet : pm.getPortlets(  ) )
         {
             for ( int i = 0; i < _prefix.length; i++ )
             {
                 String strPortletFile = _prefix[i] + portlet.getJspBaseName(  ) + EXT_JSP;
-                String strPath = getFilePath( pm, PATH, strPortletFile );
-                String strSourceCode = getPortletJspFile( portlet, pm.getPluginName(  ), i );
+                String strPath = getFilePath( pm, _path, strPortletFile );
+                String strSourceCode = getPortletJspFile( portlet, strPluginName, i, pm.isModule() );
                 strSourceCode = strSourceCode.replace( "&lt;", "<" );
                 strSourceCode = strSourceCode.replace( "&gt;", ">" );
                 map.put( strPath, strSourceCode );
@@ -82,12 +86,13 @@ public class PortletJspGenerator extends AbstractGenerator
     * @param nPortletJspType The type of portlet
     * @return The source code of the portlet jsp
     */
-    private String getPortletJspFile( Portlet portlet, String strPluginName, int nPortletJspType )
+    private String getPortletJspFile( Portlet portlet, String strPluginName, int nPortletJspType, boolean bIsModule )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( Markers.MARK_PORTLET, portlet );
         model.put( Markers.MARK_PLUGIN_NAME, strPluginName );
         model.put( Markers.MARK_PORTLET_JSP_TYPE, nPortletJspType );
+        model.put( Markers.MARK_IS_MODULE, bIsModule );
 
         return build( model );
     }

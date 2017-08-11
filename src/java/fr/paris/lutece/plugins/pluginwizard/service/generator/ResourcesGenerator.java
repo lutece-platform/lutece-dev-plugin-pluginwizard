@@ -56,7 +56,7 @@ import java.util.Map;
 public class ResourcesGenerator extends AbstractGenerator
 {
     private static final String PATH = "src/java/fr/paris/lutece/plugins/{plugin_name}/resources/";
-    private static String[] _languages = { "en", "fr" };
+    private static String[] _languages = { "", "fr" };
     private static String[] _prefix = { "create", "modify" };
     private static String[] _suffix = { "created", "updated", "removed" };
 
@@ -67,11 +67,16 @@ public class ResourcesGenerator extends AbstractGenerator
     public Map generate( PluginModel pm )
     {
         HashMap map = new HashMap(  );
-
+        
+        String prefixFileName = pm.getPluginNameForRessource();
+        
         for ( String strLanguage : _languages )
         {
             String strPath = getFilePath( pm, PATH,
-                    pm.getPluginName(  ).toLowerCase(  ) + "_messages_" + strLanguage + ".properties" );
+                    pm.getPluginName(  ).toLowerCase(  ) + "_messages" 
+                                + (strLanguage.length()>0?"_":"") 
+                                + strLanguage + ".properties" );
+
             String strSourceCode = getCode( pm, strLanguage );
             map.put( strPath, strSourceCode );
         }
@@ -107,9 +112,18 @@ public class ResourcesGenerator extends AbstractGenerator
      */
     private void generatePluginKeys( StringBuilder sb, PluginModel pm )
     {
-        sb.append( "# Plugin's keys\n" );
-        sb.append( "plugin.provider=" ).append( pm.getPluginProvider(  ) ).append( "\n" );
-        sb.append( "plugin.description=" ).append( pm.getPluginDescription(  ) ).append( "\n" );
+    	sb.append( "# Plugin's keys\n" );
+    	if ( pm.isModule( ) )
+        {
+            sb.append( "module.provider=" ).append( pm.getPluginProvider(  ) ).append( "\n" );
+    	    sb.append( "module.description=" ).append( pm.getPluginDescription(  ) ).append( "\n" );         	
+        }
+        else
+        {
+            sb.append( "plugin.provider=" ).append( pm.getPluginProvider(  ) ).append( "\n" );
+    	    sb.append( "plugin.description=" ).append( pm.getPluginDescription(  ) ).append( "\n" );
+        }
+       
         sb.append( "\n" );
     }
 

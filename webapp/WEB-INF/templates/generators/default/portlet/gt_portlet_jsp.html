@@ -1,22 +1,29 @@
-  <#assign nBeginIndex = portlet.portletTypeName?last_index_of("_")><#assign portletName = portlet.portletTypeName?substring(0, nBeginIndex)?lower_case>	
+<#assign nBeginIndex = portlet.portletTypeName?last_index_of("_")><#assign portletName = portlet.portletTypeName?substring(0, nBeginIndex)?lower_case>	
 <#switch portlet_jsp_type>
  
  <#case 0>
-<%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page errorPage=" <#if is_Module>../../</#if>../../ErrorPage.jsp" %>
 
-<jsp:include page="../../PortletAdminHeader.jsp" />
+<jsp:include page="<#if is_Module>../../</#if>../../PortletAdminHeader.jsp" />
 
 <jsp:useBean id="${portlet.portletClass}" scope="session" class="fr.paris.lutece.plugins.${plugin_name}.web.portlet.${portlet.portletClass}JspBean" />
 
 <% ${portlet.portletClass}.init( request, ${portlet.portletClass}.RIGHT_MANAGE_ADMIN_SITE ); %>
 <%= ${portlet.portletClass}.getModify ( request ) %>
 
-<%@ include file="../../AdminFooter.jsp" %>
+<%@ include file="<#if is_Module>../../</#if>../../AdminFooter.jsp" %>
 
+
+ <#if is_Module>
+	<%@ include file="../../../../AdminFooter.jsp" %>
+ <#else>
+	<%@ include file="../../AdminFooter.jsp" %>
+ 	
+ </#if>
  <#break>
  
-  <#case 1>
-<%@ page errorPage="../../ErrorPage.jsp" %>
+<#case 1>
+<%@ page errorPage="<#if is_Module>../../</#if>../../ErrorPage.jsp" %>
 
 <jsp:useBean id="${portlet.portletClass}" scope="session" class="fr.paris.lutece.plugins.${plugin_name}.web.portlet.${portlet.portletClass}JspBean" />
 
@@ -25,25 +32,25 @@
     response.sendRedirect( ${portlet.portletClass}.doModify( request ) );
 %>
 
- <#break>
+<#break>
  
-  <#case 2>
+<#case 2>
 
-<%@ page errorPage="../../ErrorPage.jsp" %>
-<jsp:include page="../../PortletAdminHeader.jsp" />
+<%@ page errorPage="<#if is_Module>../../</#if>../../ErrorPage.jsp" %>
 
+<jsp:include page="<#if is_Module>../../</#if>../../PortletAdminHeader.jsp" />
 <jsp:useBean id="${portlet.portletClass}" scope="session" class="fr.paris.lutece.plugins.${plugin_name}.web.portlet.${portlet.portletClass}JspBean" />
 
 <% ${portlet.portletClass}.init( request, ${portlet.portletClass}.RIGHT_MANAGE_ADMIN_SITE); %>
 <%= ${portlet.portletClass}.getCreate ( request ) %>
 
-<%@ include file="../../AdminFooter.jsp" %>
+<%@ include file="<#if is_Module>../../</#if>../../AdminFooter.jsp" %>
 
- <#break>
+<#break>
 
-  <#case 3>
+<#case 3>
 
-<%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page errorPage="<#if is_Module>../../</#if>../../ErrorPage.jsp" %>
 
 <jsp:useBean id="${portlet.portletClass}" scope="session" class="fr.paris.lutece.plugins.${plugin_name}.web.portlet.${portlet.portletClass}JspBean" />
 
@@ -54,7 +61,7 @@
  <#break>
 
 
-  <#default>
+ <#default>
   
-  </#switch>  
+ </#switch>  
 

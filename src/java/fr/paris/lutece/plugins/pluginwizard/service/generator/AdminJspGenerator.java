@@ -37,6 +37,7 @@ import fr.paris.lutece.plugins.pluginwizard.business.model.BusinessClass;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Feature;
 import fr.paris.lutece.plugins.pluginwizard.business.model.PluginModel;
 import fr.paris.lutece.plugins.pluginwizard.service.ModelService;
+import fr.paris.lutece.plugins.pluginwizard.util.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,8 +82,8 @@ public class AdminJspGenerator extends AbstractGenerator
     public Map generate( PluginModel pm )
     {
         HashMap map = new HashMap(  );
-        String strPluginName = pm.getPluginName(  );
-
+        String strPluginName = pm.getPluginNameAsRadicalPackage();
+        
         for ( Feature feature : pm.getFeatures(  ) )
         {
             List<BusinessClass> listBusinessClasses = ModelService.getBusinessClassesByFeature( pm, feature.getId(  ) );
@@ -97,7 +98,7 @@ public class AdminJspGenerator extends AbstractGenerator
                     String strPath = getFilePath( pm, PATH, strJspFileName );
 
                     String strSourceCode = getJspBusinessFile( businessClass, feature.getFeatureName(  ),
-                            strPluginName, i + 1 );
+                            strPluginName, i + 1, pm.isModule() );
                     strSourceCode = strSourceCode.replace( "&lt;", "<" );
                     strSourceCode = strSourceCode.replace( "&gt;", ">" );
                     map.put( strPath, strSourceCode );
@@ -106,7 +107,7 @@ public class AdminJspGenerator extends AbstractGenerator
 
             String strPath = getFilePath( pm, PATH, feature.getFeatureName(  ) + EXT_JSP );
 
-            String strSourceCode = getFeatureJspFile( feature.getFeatureName(  ), strPluginName );
+            String strSourceCode = getFeatureJspFile( feature.getFeatureName(  ), strPluginName, pm.isModule() );
             strSourceCode = strSourceCode.replace( "&lt;", "<" );
             strSourceCode = strSourceCode.replace( "&gt;", ">" );
             map.put( strPath, strSourceCode );
@@ -121,17 +122,19 @@ public class AdminJspGenerator extends AbstractGenerator
      * @param strFeatureName The feature name
      * @param strPluginName The generated plugin name
      * @param nJspType The type of jsp
+     * @param bIsModule The Module test
      * @return The source code of the jsp
      */
     private String getJspBusinessFile( BusinessClass businessClass, String strFeatureName, String strPluginName,
-        int nJspType )
+        int nJspType, boolean bIsModule )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( Markers.MARK_FEATURE_NAME, strFeatureName );
         model.put( Markers.MARK_BUSINESS_CLASS, businessClass );
         model.put( Markers.MARK_PLUGIN_NAME, strPluginName );
         model.put( Markers.MARK_JSP_TYPE, "" + nJspType );
-
+        model.put( Markers.MARK_IS_MODULE, bIsModule );
+        
         String strBeanName = strFeatureName.toLowerCase(  ) + businessClass.getBusinessClassCapsFirst(  );
         model.put( Markers.MARK_BEAN_NAME, strBeanName );
 
@@ -142,13 +145,16 @@ public class AdminJspGenerator extends AbstractGenerator
      * Gets the JSP feature file code
      * @param strFeatureName The feature name
      * @param strPluginName The plugin name
+     * @param bIsModule The Module test
      * @return The source code of the JSP
      */
-    private String getFeatureJspFile( String strFeatureName, String strPluginName )
+    private String getFeatureJspFile( String strFeatureName, String strPluginName, boolean bIsModule )
     {
         Map<String, Object> model = new HashMap<String, Object>(  );
         model.put( Markers.MARK_FEATURE_NAME, strFeatureName );
         model.put( Markers.MARK_PLUGIN_NAME, strPluginName );
+        model.put( Markers.MARK_IS_MODULE, bIsModule );
+
 
         return build( _strFeatureTemplate, model );
     }
