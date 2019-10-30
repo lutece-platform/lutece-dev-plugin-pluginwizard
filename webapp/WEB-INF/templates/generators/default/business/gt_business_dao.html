@@ -77,7 +77,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
         }
         finally
         {
-            daoUtil.free( );
+            daoUtil.close( );
         }
     }
 
@@ -99,11 +99,15 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
             
             ${business_class.instanceName}.setId( daoUtil.getInt( nIndex++ ) );
             <#list business_class.attributes as attribute>
-            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );
+            <#if attribute_has_next>
+            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );            
+            <#else>
+            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex ) );            
+            </#if>
             </#list>
         }
 
-        daoUtil.free( );
+        daoUtil.close( );
         return ${business_class.instanceName};
     }
 
@@ -116,7 +120,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
         daoUtil.setInt( 1 , nKey );
         daoUtil.executeUpdate( );
-        daoUtil.free( );
+        daoUtil.close( );
     }
 
     /**
@@ -135,7 +139,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
         daoUtil.setInt( nIndex , ${business_class.instanceName}.getId( ) );
 
         daoUtil.executeUpdate( );
-        daoUtil.free( );
+        daoUtil.close( );
     }
 
     /**
@@ -144,7 +148,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
     @Override
     public List&lt;${business_class.businessClass}&gt; select${business_class.businessClass}sList( Plugin plugin )
     {
-        List&lt;${business_class.businessClass}&gt; ${business_class.instanceName}List = new ArrayList&lt;${business_class.businessClass}&gt;(  );
+        List&lt;${business_class.businessClass}&gt; ${business_class.instanceName}List = new ArrayList&lt;&gt;(  );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
         daoUtil.executeQuery(  );
 
@@ -155,13 +159,17 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
             
             ${business_class.instanceName}.setId( daoUtil.getInt( nIndex++ ) );
             <#list business_class.attributes as attribute>
+            <#if attribute_has_next>
             ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );
+            <#else>
+            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex ) );            
+            </#if>
             </#list>
 
             ${business_class.instanceName}List.add( ${business_class.instanceName} );
         }
 
-        daoUtil.free( );
+        daoUtil.close( );
         return ${business_class.instanceName}List;
     }
     
@@ -171,7 +179,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
     @Override
     public List&lt;Integer&gt; selectId${business_class.businessClass}sList( Plugin plugin )
     {
-        List&lt;Integer&gt; ${business_class.instanceName}List = new ArrayList&lt;Integer&gt;( );
+        List&lt;Integer&gt; ${business_class.instanceName}List = new ArrayList&lt;&gt;( );
         DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL_ID, plugin );
         daoUtil.executeQuery(  );
 
@@ -180,7 +188,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
             ${business_class.instanceName}List.add( daoUtil.getInt( 1 ) );
         }
 
-        daoUtil.free( );
+        daoUtil.close( );
         return ${business_class.instanceName}List;
     }
     
@@ -199,7 +207,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
             ${business_class.instanceName}List.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
         }
 
-        daoUtil.free( );
+        daoUtil.close( );
         return ${business_class.instanceName}List;
     }
 }
