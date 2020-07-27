@@ -160,7 +160,7 @@ public final class ModelService
             // if the plugin doesn't exist
             model = new Model( );
             model.setName( pm.getPluginName( ) );
-
+           
             ModelHome.create( model );
         }
         else
@@ -1269,5 +1269,9 @@ public final class ModelService
         {
             throw new AppException( "JSON exception", e );
         }
+    }
+    public static boolean getLoaded( int nPluginId )
+    {
+        return getPluginModel( nPluginId ).getLoaded( );
     }
 }
