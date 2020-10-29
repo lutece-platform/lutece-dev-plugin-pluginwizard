@@ -46,52 +46,53 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public final class MapperService
 {
-	private static ObjectMapper _mapper = new ObjectMapper( ).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static ObjectMapper _mapper = new ObjectMapper( ).configure( DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false );
 
-	/** Private constructor */
-	private MapperService( )
-	{
-	}
+    /** Private constructor */
+    private MapperService( )
+    {
+    }
 
-	/**
-	 * Transform the model into a JSON String
-	 * @param model
-	 *            The model
-	 * @return A JSON String
-	 */
-	public static String getJson( PluginModel model )
-	{
-		try
-		{
-			String sw = _mapper.writeValueAsString( model);
-			return sw;
-		}
-		catch (JsonProcessingException e)
-		{
+    /**
+     * Transform the model into a JSON String
+     * 
+     * @param model
+     *            The model
+     * @return A JSON String
+     */
+    public static String getJson( PluginModel model )
+    {
+        try
+        {
+            String sw = _mapper.writeValueAsString( model );
+            return sw;
+        }
+        catch( JsonProcessingException e )
+        {
 
-			throw new AppException("JSON error", e);
-		}
+            throw new AppException( "JSON error", e );
+        }
 
-	}
+    }
 
-	/**
-	 * Read a JSON String to fill a model
-	 * 
-	 * @param strJson
-	 *            The JSON String
-	 * @return The model
-	 */
-	public static PluginModel readJson( String strJson )
-	{
-		try
-		{
-			return _mapper.readValue( strJson, PluginModel.class );
-		}
-		catch( Exception ex )
-		{
-			AppLogService.error( "Error while reading JSON " + ex.getMessage( ) + "JSON = " + strJson, ex );
-		}
+    /**
+     * Read a JSON String to fill a model
+     * 
+     * @param strJson
+     *            The JSON String
+     * @return The model
+     */
+    public static PluginModel readJson( String strJson )
+    {
+        try
+        {
+            return _mapper.readValue( strJson, PluginModel.class );
+        }
+        catch( Exception ex )
+        {
+            AppLogService.error( "Error while reading JSON " + ex.getMessage( ) + "JSON = " + strJson, ex );
+        }
 
-		return null;
-	}
+        return null;
+    }
 }
