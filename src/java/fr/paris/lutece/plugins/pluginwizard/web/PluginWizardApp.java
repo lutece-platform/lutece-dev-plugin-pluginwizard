@@ -326,17 +326,16 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         }
 
         _strPluginName = form.getName( );
-        
+
         // search duplicates plugin names
-        if ( AppPropertiesService.getPropertyBoolean( PROPERTY_SEARCH_DUPLICATES, false) )
+        if ( AppPropertiesService.getPropertyBoolean( PROPERTY_SEARCH_DUPLICATES, false ) )
         {
-        	_nPluginId = ModelHome.exists( form.getName( ) ) ;
+            _nPluginId = ModelHome.exists( form.getName( ) );
         }
         else
         {
-        	_nPluginId = -1 ;
+            _nPluginId = -1;
         }
-        
 
         if ( _nPluginId == -1 )
         {
