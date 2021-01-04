@@ -695,6 +695,8 @@ public final class ModelService
             {
 
                 BusinessClass newBusinessClass = null;
+                List<Attribute> attrList = bc.getAttributes( );
+                
                 try
                 {
                     newBusinessClass = _mapper.readValue( _mapper.writeValueAsString( businessClass ), bc.getClass( ) );
@@ -703,6 +705,11 @@ public final class ModelService
                 {
 
                     throw new AppException( "JSON parsing error", e );
+                }
+                
+                if (attrList != null && !attrList.isEmpty( ) )
+                {
+                    newBusinessClass.setAttributes( attrList );
                 }
 
                 list.set( i, newBusinessClass );
