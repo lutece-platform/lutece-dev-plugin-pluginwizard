@@ -94,6 +94,7 @@
                             </#if>
                             </#if>
 
+                            <#if plugin_rest?? && plugin_rest.getIdBusinessClasses()?? >
                             <#assign restSize = plugin_rest.getIdBusinessClasses()?size>                
                             <#if restSize gt 0>
                             <li>
@@ -106,6 +107,7 @@
                                     </#if>
                                 </h5>
                             </li>
+                            </#if>                            
                             </#if>
 
                         </ul>
