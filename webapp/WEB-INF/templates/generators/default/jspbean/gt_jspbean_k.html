@@ -146,7 +146,7 @@ class ${business_class.businessClass}JspBean : Abstract${feature_name}JspBean()
     @Action( ACTION_CREATE_${business_class.businessClass?upper_case} )
     fun doCreate${business_class.businessClass}( request: HttpServletRequest ): String
     {
-        populate( _${business_class.businessClass?lower_case}, request, request.getLocale( ) )
+        populate( _${business_class.businessClass?lower_case}, request, getLocale( ) )
 
         // Check constraints
         if ( !validateBean( _${business_class.businessClass?lower_case}, VALIDATION_ATTRIBUTES_PREFIX ) )
@@ -155,7 +155,7 @@ class ${business_class.businessClass}JspBean : Abstract${feature_name}JspBean()
         }
 
         ${business_class.businessClass}Home.create( _${business_class.businessClass?lower_case}!! )
-        addInfo( INFO_${business_class.businessClass?upper_case}_CREATED, getLocale(  ) )
+        addInfo( INFO_${business_class.businessClass?upper_case}_CREATED, getLocale( ) )
 
         return redirectView( request, VIEW_MANAGE_${business_class.businessClass?upper_case}S )
     }
@@ -190,7 +190,7 @@ class ${business_class.businessClass}JspBean : Abstract${feature_name}JspBean()
     {
         val nId = Integer.parseInt( request.getParameter( PARAMETER_ID_${business_class.businessClass?upper_case} ) )
         ${business_class.businessClass}Home.remove( nId )
-        addInfo( INFO_${business_class.businessClass?upper_case}_REMOVED, getLocale(  ) )
+        addInfo( INFO_${business_class.businessClass?upper_case}_REMOVED, getLocale( ) )
 
         return redirectView( request, VIEW_MANAGE_${business_class.businessClass?upper_case}S )
     }
@@ -226,7 +226,7 @@ class ${business_class.businessClass}JspBean : Abstract${feature_name}JspBean()
     @Action( ACTION_MODIFY_${business_class.businessClass?upper_case} )
     fun doModify${business_class.businessClass}( request: HttpServletRequest ): String
     {
-        populate( _${business_class.businessClass?lower_case}, request, request.getLocale( ) )
+        populate( _${business_class.businessClass?lower_case}, request, getLocale( ) )
 
         // Check constraints
         if ( !validateBean( _${business_class.businessClass?lower_case}, VALIDATION_ATTRIBUTES_PREFIX ) )
@@ -235,7 +235,7 @@ class ${business_class.businessClass}JspBean : Abstract${feature_name}JspBean()
         }
 
         ${business_class.businessClass}Home.update( _${business_class.businessClass?lower_case}!! )
-        addInfo( INFO_${business_class.businessClass?upper_case}_UPDATED, getLocale(  ) )
+        addInfo( INFO_${business_class.businessClass?upper_case}_UPDATED, getLocale( ) )
 
         return redirectView( request, VIEW_MANAGE_${business_class.businessClass?upper_case}S )
     }

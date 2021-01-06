@@ -113,7 +113,7 @@ class ${business_class.businessClass}XPage : MVCApplication()
         var model = getModel(  )
         model.put( MARK_${business_class.businessClass?upper_case}_LIST, ${business_class.businessClass?cap_first}Home.get${business_class.businessClass?cap_first}sList(  ) )
         
-        return getXPage( TEMPLATE_MANAGE_${business_class.businessClass?upper_case}S, request.getLocale(  ), model )
+        return getXPage( TEMPLATE_MANAGE_${business_class.businessClass?upper_case}S, getLocale( request ), model )
     }
 
     /**
@@ -130,7 +130,7 @@ class ${business_class.businessClass}XPage : MVCApplication()
         var model = getModel()
         model.put( MARK_${business_class.businessClass?upper_case}, _${business_class.businessClass?lower_case} )
            
-        return getXPage( TEMPLATE_CREATE_${business_class.businessClass?upper_case}, request.getLocale(  ), model )
+        return getXPage( TEMPLATE_CREATE_${business_class.businessClass?upper_case}, getLocale( request ), model )
     }
 
     /**
@@ -142,7 +142,7 @@ class ${business_class.businessClass}XPage : MVCApplication()
     @Action( ACTION_CREATE_${business_class.businessClass?upper_case} )
     fun doCreate${business_class.businessClass?cap_first}( request: HttpServletRequest ): XPage
     {
-        populate( _${business_class.businessClass?lower_case}, request, request.getLocale( ) )
+        populate( _${business_class.businessClass?lower_case}, request, getLocale( request ) )
 
         // Check constraints
         if ( !validateBean( _${business_class.businessClass?lower_case} ) )
@@ -211,7 +211,7 @@ class ${business_class.businessClass}XPage : MVCApplication()
         val model = getModel(  )
         model.put( MARK_${business_class.businessClass?upper_case}, _${business_class.businessClass?lower_case} )
         
-        return getXPage( TEMPLATE_MODIFY_${business_class.businessClass?upper_case}, request.getLocale(  ), model )
+        return getXPage( TEMPLATE_MODIFY_${business_class.businessClass?upper_case}, getLocale( request ), model )
     }
 
     /**
@@ -223,7 +223,7 @@ class ${business_class.businessClass}XPage : MVCApplication()
     @Action( ACTION_MODIFY_${business_class.businessClass?upper_case} )
     fun doModify${business_class.businessClass?cap_first}( request: HttpServletRequest ): XPage
     {
-        populate( _${business_class.businessClass?lower_case}, request, request.getLocale( ) )
+        populate( _${business_class.businessClass?lower_case}, request, getLocale( request ) )
 
         // Check constraints
         if ( !validateBean( _${business_class.businessClass?lower_case} ) )
@@ -265,7 +265,7 @@ class ${plugin_application.applicationClass} : MVCApplication()
     @View( value = VIEW_HOME , defaultView = true )
     fun viewHome( request: HttpServletRequest ): XPage
     {
-        return getXPage( TEMPLATE_XPAGE, request.getLocale(  ) )
+        return getXPage( TEMPLATE_XPAGE, getLocale( request ) )
     }
 }
 </#if>
