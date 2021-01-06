@@ -111,7 +111,7 @@ public class ${business_class.businessClass}XPage extends MVCApplication
         Map<String, Object> model = getModel(  );
         model.put( MARK_${business_class.businessClass?upper_case}_LIST, ${business_class.businessClass?cap_first}Home.get${business_class.businessClass?cap_first}sList(  ) );
         
-        return getXPage( TEMPLATE_MANAGE_${business_class.businessClass?upper_case}S, request.getLocale(  ), model );
+        return getXPage( TEMPLATE_MANAGE_${business_class.businessClass?upper_case}S, getLocale( request ), model );
     }
 
     /**
@@ -129,7 +129,7 @@ public class ${business_class.businessClass}XPage extends MVCApplication
         model.put( MARK_${business_class.businessClass?upper_case}, _${business_class.businessClass?lower_case} );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_CREATE_${business_class.businessClass?upper_case} ) );
 
-        return getXPage( TEMPLATE_CREATE_${business_class.businessClass?upper_case}, request.getLocale(  ), model );
+        return getXPage( TEMPLATE_CREATE_${business_class.businessClass?upper_case}, getLocale( request ), model );
     }
 
     /**
@@ -217,7 +217,7 @@ public class ${business_class.businessClass}XPage extends MVCApplication
         model.put( MARK_${business_class.businessClass?upper_case}, _${business_class.businessClass?lower_case} );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_MODIFY_${business_class.businessClass?upper_case} ) );
 
-        return getXPage( TEMPLATE_MODIFY_${business_class.businessClass?upper_case}, request.getLocale(  ), model );
+        return getXPage( TEMPLATE_MODIFY_${business_class.businessClass?upper_case}, getLocale( request ), model );
     }
 
     /**
@@ -279,7 +279,7 @@ public class ${plugin_application.applicationClass} extends MVCApplication
     @View( value = VIEW_HOME , defaultView = true )
     public XPage viewHome( HttpServletRequest request )
     {
-        return getXPage( TEMPLATE_XPAGE, request.getLocale(  ) );
+        return getXPage( TEMPLATE_XPAGE, getLocale( request ) );
     }
 }
 </#if>
