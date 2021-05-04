@@ -74,7 +74,6 @@ public final class ConfigurationKeyDAO implements IConfigurationKeyDAO
             }
 
             nKey = daoUtil.getInt( 1 ) + 1;
-            daoUtil.free( );
 
             return nKey;
         }
@@ -100,7 +99,6 @@ public final class ConfigurationKeyDAO implements IConfigurationKeyDAO
             daoUtil.setString( 3, configurationKey.getKeyValue( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -131,8 +129,6 @@ public final class ConfigurationKeyDAO implements IConfigurationKeyDAO
                 configurationKey.setKeyValue( daoUtil.getString( 3 ) );
             }
 
-            daoUtil.free( );
-
             return configurationKey;
         }
     }
@@ -151,7 +147,6 @@ public final class ConfigurationKeyDAO implements IConfigurationKeyDAO
         {
             daoUtil.setInt( 1, nConfigurationKeyId );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -174,7 +169,6 @@ public final class ConfigurationKeyDAO implements IConfigurationKeyDAO
             daoUtil.setInt( 4, configurationKey.getIdKey( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -202,8 +196,6 @@ public final class ConfigurationKeyDAO implements IConfigurationKeyDAO
 
                 configurationKeyList.add( configurationKey );
             }
-
-            daoUtil.free( );
 
             return configurationKeyList;
         }
