@@ -69,7 +69,6 @@ public final class ModelDAO implements IModelDAO
 
             daoUtil.next( );
             nKey = daoUtil.getInt( 1 ) + 1;
-            daoUtil.free( );
 
             return nKey;
         }
@@ -96,7 +95,6 @@ public final class ModelDAO implements IModelDAO
             daoUtil.setString( 3, model.getModelJson( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -128,8 +126,6 @@ public final class ModelDAO implements IModelDAO
                 model.setModelJson( daoUtil.getString( 3 ) );
             }
 
-            daoUtil.free( );
-
             return model;
         }
     }
@@ -149,7 +145,6 @@ public final class ModelDAO implements IModelDAO
         {
             daoUtil.setInt( 1, nModelId );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -173,7 +168,6 @@ public final class ModelDAO implements IModelDAO
             daoUtil.setInt( 4, model.getIdPlugin( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -202,8 +196,6 @@ public final class ModelDAO implements IModelDAO
 
                 modelList.add( model );
             }
-
-            daoUtil.free( );
 
             return modelList;
         }
