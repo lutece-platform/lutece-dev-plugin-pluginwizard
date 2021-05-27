@@ -374,6 +374,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         _nPluginId = ModelService.savePluginModelFromJson( pluginModel );
         _description = ModelService.getDescription( _nPluginId );
+        _strPluginName = ( "MODULE".equals( pluginModel.getType( ) ) ? pluginModel.getModuleName( ) : pluginModel.getPluginName( ) );
 
         return redirectView( request, VIEW_MODIFY_DESCRIPTION );
     }
