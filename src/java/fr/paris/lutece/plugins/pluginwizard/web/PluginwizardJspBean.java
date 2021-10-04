@@ -61,6 +61,11 @@ public class PluginwizardJspBean extends PluginAdminPageJspBean
     // //////////////////////////////////////////////////////////////////////////
     // Constants
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4166510254090826796L;
+
     // Right
     /**
      *
