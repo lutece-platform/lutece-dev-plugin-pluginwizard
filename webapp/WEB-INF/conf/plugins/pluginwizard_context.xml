@@ -245,6 +245,22 @@
          <value>/generators/default/sql/gt_sql.html</value>
       </property>
    </bean>
+   <bean id="pluginwizard.generator.admin.java.business_v5" class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessClassGenerator">
+      <property name="files">
+         <ref bean="pluginwizard.list.files.business_v5" />
+      </property>
+   </bean>
+   <bean id="pluginwizard.list.files.business_v5" class="java.util.ArrayList">
+      <constructor-arg>
+         <list>
+            <ref bean="pluginwizard.business.class" />
+            <ref bean="pluginwizard.business.dao_v5" />
+            <ref bean="pluginwizard.business.idao" />
+            <ref bean="pluginwizard.business.home" />
+            <ref bean="pluginwizard.business.test" />
+         </list>
+      </constructor-arg>
+   </bean>
    <bean id="pluginwizard.generator.admin.java.business" class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessClassGenerator">
       <property name="files">
          <ref bean="pluginwizard.list.files.business" />
@@ -298,6 +314,14 @@
       </property>
       <property name="template">
          <value>/generators/default/business/gt_business_dao.html</value>
+      </property>
+   </bean>
+   <bean id="pluginwizard.business.dao_v5" class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+      <property name="suffix">
+         <value>DAO</value>
+      </property>
+      <property name="template">
+         <value>/generators/default/business/gt_business_dao_v5.html</value>
       </property>
    </bean>
    <bean id="pluginwizard.business.idao" class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
@@ -662,7 +686,7 @@
    </bean>
    <bean id="schemeLutece6" class="fr.paris.lutece.plugins.pluginwizard.service.generator.GenerationScheme">
       <property name="name">
-         <value>Java Lutece 6.0 (DAO SQL)</value>
+         <value>Java Lutece 6.1 (DAO SQL)</value>
       </property>
       <property name="generatorsList">
          <list>
@@ -673,7 +697,7 @@
             <ref bean="pluginwizard.generator.site" />
             <ref bean="pluginwizard.generator.resources" />
             <ref bean="pluginwizard.generator.sql" />
-            <ref bean="pluginwizard.generator.admin.java.business" />
+            <ref bean="pluginwizard.generator.admin.java.business_v5" />
             <ref bean="pluginwizard.generator.admin.jspbeans.before_7" />
             <ref bean="pluginwizard.generator.admin.jsp" />
             <ref bean="pluginwizard.generator.admin.html.v6" />
