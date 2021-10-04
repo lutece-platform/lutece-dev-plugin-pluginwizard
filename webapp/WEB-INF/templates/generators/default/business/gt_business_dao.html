@@ -135,7 +135,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            </#list>
 	        }
 	
-	        daoUtil.free( );
 	        return ${business_class.instanceName};
         }
     }
@@ -150,7 +149,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
         {
 	        daoUtil.setInt( 1 , nKey );
 	        daoUtil.executeUpdate( );
-	        daoUtil.free( );
         }
     }
 
@@ -182,7 +180,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	        daoUtil.setInt( nIndex , ${business_class.instanceName}.getId( ) );
 	
 	        daoUtil.executeUpdate( );
-	        daoUtil.free( );
         }
     }
 
@@ -226,7 +223,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            ${business_class.instanceName}List.add( ${business_class.instanceName} );
 	        }
 	
-	        daoUtil.free( );
 	        return ${business_class.instanceName}List;
         }
     }
@@ -247,7 +243,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            ${business_class.instanceName}List.add( daoUtil.getInt( 1 ) );
 	        }
 	
-	        daoUtil.free( );
 	        return ${business_class.instanceName}List;
         }
     }
@@ -268,7 +263,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            ${business_class.instanceName}List.addItem( daoUtil.getInt( 1 ) , daoUtil.getString( 2 ) );
 	        }
 	
-	        daoUtil.free( );
 	        return ${business_class.instanceName}List;
     	}
     }
