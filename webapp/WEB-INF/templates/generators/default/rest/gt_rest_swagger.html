@@ -57,7 +57,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.apache.log4j.Logger;
+import fr.paris.lutece.portal.service.util.AppLogService;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
@@ -70,7 +70,6 @@ public class SwaggerRest
     private static final String BASE_INFOS_SCHEMES = "schemes";
     private static final String BASE_INFOS_HOST = "host";
     private static final String BASE_INFOS_BASE_PATH = "basePath";
-    private final Logger _logger = Logger.getLogger( RestConstants.REST_LOGGER );
     
     /**
      * Get Swagger.json
@@ -109,7 +108,7 @@ public class SwaggerRest
                     .entity( strSwaggerJson )
                     .build( );
         }
-        _logger.error( Constants.ERROR_NOT_FOUND_RESOURCE );
+        AppLogService.error( Constants.ERROR_NOT_FOUND_RESOURCE );
         return Response.status( Response.Status.NOT_FOUND )
                 .entity( JsonUtil.buildJsonResponse( new ErrorJsonResponse( Response.Status.NOT_FOUND.name( ), Constants.ERROR_NOT_FOUND_RESOURCE ) ) )
                 .build( );
