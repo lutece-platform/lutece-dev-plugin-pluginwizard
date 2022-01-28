@@ -32,6 +32,12 @@
  * License 1.0
  */
 
+<#list business_class.attributes as attribute>
+    <#if attribute.type == "File">
+        <#assign hasFile=true>
+    </#if>
+</#list>
+
 package fr.paris.lutece.plugins.${radical_package}.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
@@ -41,7 +47,9 @@ import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
-
+<#if hasFile?? && hasFile>
+import fr.paris.lutece.portal.business.file.File;
+</#if>
 /**
  * This class provides Data Access methods for ${business_class.businessClass} objects
  */
@@ -65,7 +73,18 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
         {
             int nIndex = 1;
             <#list business_class.attributes as attribute>
+            <#if attribute.type == "File">
+            if ( ${business_class.instanceName}.get${attribute.name}( ) != null )
+		    {
+		    	daoUtil.setString( nIndex++ , ${business_class.instanceName}.get${attribute.name}( ).getFileKey( ) );
+		    }
+		    else
+		    {
+		    	daoUtil.setString( nIndex++ , null );
+		    }
+            <#else>
             daoUtil.set${attribute.type?cap_first}( nIndex++ , ${business_class.instanceName}.get${attribute.name}( ) );
+            </#if>
             </#list>
             
             daoUtil.executeUpdate( );
@@ -97,9 +116,21 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            ${business_class.instanceName}.setId( daoUtil.getInt( nIndex++ ) );
 	            <#list business_class.attributes as attribute>
 	            <#if attribute_has_next>
-	            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );            
+	            <#if attribute.type == "File">
+	            File ${attribute.variableName} = new File();
+	            ${attribute.variableName}.setFileKey( daoUtil.getString( nIndex++ ) );
+	            ${business_class.instanceName}.set${attribute.name}( ${attribute.variableName} );
+			    <#else>
+			    ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );
+			    </#if>
 	            <#else>
-	            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex ) );            
+	            <#if attribute.type == "File">
+	            File ${attribute.variableName} = new File();
+	            ${attribute.variableName}.setFileKey( daoUtil.getString( nIndex ) );
+	            ${business_class.instanceName}.set${attribute.name}( ${attribute.variableName} );
+			    <#else>
+			    ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex ) );
+			    </#if>         
 	            </#if>
 	            </#list>
 	        }
@@ -135,7 +166,18 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	        
 	        daoUtil.setInt( nIndex++ , ${business_class.instanceName}.getId( ) );
 	        <#list business_class.attributes as attribute>
-	        daoUtil.set${attribute.type?cap_first}( nIndex++ , ${business_class.instanceName}.get${attribute.name}( ) );
+	        <#if attribute.type == "File">
+	        if ( ${business_class.instanceName}.get${attribute.name}( ) != null )
+		    {
+		    	daoUtil.setString( nIndex++ , ${business_class.instanceName}.get${attribute.name}( ).getFileKey( ) );
+		    }
+		    else
+		    {
+		    	daoUtil.setString( nIndex++ , null );
+		    }
+           	 <#else>
+            	daoUtil.set${attribute.type?cap_first}( nIndex++ , ${business_class.instanceName}.get${attribute.name}( ) );
+            	</#if>
 	        </#list>
 	        daoUtil.setInt( nIndex , ${business_class.instanceName}.getId( ) );
 	
@@ -163,9 +205,21 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            ${business_class.instanceName}.setId( daoUtil.getInt( nIndex++ ) );
 	            <#list business_class.attributes as attribute>
 	            <#if attribute_has_next>
-	            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );
+	            <#if attribute.type == "File">
+	            File ${attribute.variableName} = new File();
+	            ${attribute.variableName}.setFileKey( daoUtil.getString( nIndex++ ) );
+	            ${business_class.instanceName}.set${attribute.name}( ${attribute.variableName} );
+			    <#else>
+			    ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex++ ) );
+			    </#if>
 	            <#else>
-	            ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex ) );            
+	            <#if attribute.type == "File">
+	            File ${attribute.variableName} = new File();
+	            ${attribute.variableName}.setFileKey( daoUtil.getString( nIndex ) );
+	            ${business_class.instanceName}.set${attribute.name}( ${attribute.variableName} );
+			    <#else>
+			    ${business_class.instanceName}.set${attribute.name}( daoUtil.get${attribute.type?cap_first}( nIndex ) );
+			    </#if>         
 	            </#if>
 	            </#list>
 	

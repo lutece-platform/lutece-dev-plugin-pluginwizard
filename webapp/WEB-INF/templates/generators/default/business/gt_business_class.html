@@ -40,6 +40,9 @@ package fr.paris.lutece.plugins.${radical_package}.business;
     <#if attribute.type == "String">
         <#assign hasString=true>
     </#if>
+    <#if attribute.type == "File">
+        <#assign hasFile=true>
+    </#if>
     <#if attribute.typeDescription?starts_with("URL")>
         <#assign hasURL=true>
     </#if>
@@ -62,7 +65,9 @@ import java.io.Serializable;
 import java.sql.Date;
 import javax.validation.constraints.NotNull;
 </#if>
-
+<#if hasFile?? && hasFile>
+import fr.paris.lutece.portal.business.file.File;
+</#if>
 /**
  * This is the business class for the object ${business_class.businessClass}
  */ 
@@ -122,6 +127,7 @@ public class ${business_class.businessClass} implements Serializable
     {
         _${attribute.variableName} = ${attribute.variableName};
     }
+    
     </#list>
     </#if>
 }

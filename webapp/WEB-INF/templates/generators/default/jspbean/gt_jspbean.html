@@ -39,6 +39,12 @@
  	<#assign msg= plugin_model.pluginName />
  	
  </#if>
+ 
+ <#list business_class.attributes as attribute>
+    <#if attribute.type == "File">
+        <#assign hasFile=true>
+    </#if>
+ </#list>
 package fr.paris.lutece.plugins.${radicalPackage}.web;
 
 import fr.paris.lutece.portal.service.message.AdminMessage;
@@ -53,6 +59,16 @@ import fr.paris.lutece.util.url.UrlItem;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+<#if hasFile?? && hasFile>
+import fr.paris.lutece.portal.service.util.AppException;
+import fr.paris.lutece.portal.service.util.AppLogService;
+import fr.paris.lutece.portal.service.file.FileService;
+import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
+import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.lang3.StringUtils;
+import fr.paris.lutece.portal.business.file.File;
+</#if>
 <#if business_class??>
 import fr.paris.lutece.plugins.${radicalPackage}.business.${business_class.businessClass?cap_first};
 import fr.paris.lutece.plugins.${radicalPackage}.business.${business_class.businessClass?cap_first}Home;
@@ -117,6 +133,26 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
     {
         _${business_class.businessClass?lower_case} = null;
         List<${business_class.businessClass}> list${business_class.businessClass}s = ${business_class.businessClass}Home.get${business_class.businessClass}sList(  );
+        <#if hasFile?? && hasFile>
+        for (${business_class.businessClass} fil : list${business_class.businessClass}s)
+        {
+        	IFileStoreServiceProvider fileStoreService = ${business_class.businessClass}Home.getFileStoreServiceProvider( );
+        	<#list business_class.attributes as attribute>
+            <#if attribute.type == "File">
+			if ( fil.get${attribute.name}( ) != null )
+			{
+				File file = fileStoreService.getFileMetaData( fil.get${attribute.name}( ).getFileKey( ) );
+				if ( file != null )
+				{
+					fil.set${attribute.name}( file );
+					String strFileUrl = fileStoreService.getFileDownloadUrlBO( file.getFileKey( ) );
+					fil.get${attribute.name}( ).setUrl( strFileUrl );
+				}
+			}
+		    </#if>
+            </#list>
+        }
+        </#if>
         Map<String, Object> model = getPaginatedListModel( request, MARK_${business_class.businessClass?upper_case}_LIST, list${business_class.businessClass}s, JSP_MANAGE_${business_class.businessClass?upper_case}S );
 
         return getPage( PROPERTY_PAGE_TITLE_MANAGE_${business_class.businessClass?upper_case}S, TEMPLATE_MANAGE_${business_class.businessClass?upper_case}S, model );
@@ -151,6 +187,30 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
     public String doCreate${business_class.businessClass}( HttpServletRequest request ) throws AccessDeniedException
     {
         populate( _${business_class.businessClass?lower_case}, request, getLocale( ) );
+        
+        <#if hasFile?? && hasFile>
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		IFileStoreServiceProvider fileStoreService = ${business_class.businessClass}Home.getFileStoreServiceProvider( );
+		<#list business_class.attributes as attribute>
+	    <#if attribute.type == "File">
+        FileItem ${attribute.paramName} = multipartRequest.getFile( "${attribute.paramName}" );
+      
+        if ( ${attribute.paramName} != null && ${attribute.paramName}.getSize( ) > 0 )
+        {
+            try
+            {
+                String strFileStoreKey = fileStoreService.storeFileItem( ${attribute.paramName} );
+                _${business_class.businessClass?lower_case}.set${attribute.name}( fileStoreService.getFile( strFileStoreKey ) );
+            }
+            catch (Exception e) 
+            {
+            	AppLogService.error( "Erreur de stockage du fichier", e );
+                throw new AppException( "Erreur de stockage du fichier", e );
+            }
+        }
+	    </#if>
+		</#list>
+		</#if>
 
         if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_CREATE_${business_class.businessClass?upper_case} ) )
         {
@@ -198,6 +258,23 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
     public String doRemove${business_class.businessClass}( HttpServletRequest request )
     {
         int nId = Integer.parseInt( request.getParameter( PARAMETER_ID_${business_class.businessClass?upper_case} ) );
+        
+        <#if hasFile?? && hasFile>
+        if ( _${business_class.businessClass?lower_case} == null || ( _${business_class.businessClass?lower_case}.getId(  ) != nId ) )
+        {
+            _${business_class.businessClass?lower_case} = ${business_class.businessClass}Home.findByPrimaryKey( nId );
+        }
+        IFileStoreServiceProvider fileStoreService = ${business_class.businessClass}Home.getFileStoreServiceProvider( );
+		<#list business_class.attributes as attribute>
+	    <#if attribute.type == "File">
+	    if ( _${business_class.businessClass?lower_case}.get${attribute.name}( ) != null && StringUtils.isNotEmpty( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) ) )
+	    {
+        	fileStoreService.delete( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
+        }
+	    </#if>
+		</#list>
+		</#if>
+        
         ${business_class.businessClass}Home.remove( nId );
         addInfo( INFO_${business_class.businessClass?upper_case}_REMOVED, getLocale(  ) );
 
@@ -220,6 +297,24 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
             _${business_class.businessClass?lower_case} = ${business_class.businessClass}Home.findByPrimaryKey( nId );
         }
 
+		<#if hasFile?? && hasFile>
+       	IFileStoreServiceProvider fileStoreService = ${business_class.businessClass}Home.getFileStoreServiceProvider( );
+       	<#list business_class.attributes as attribute>
+        <#if attribute.type == "File">
+		if ( _${business_class.businessClass?lower_case}.get${attribute.name}( ) != null && StringUtils.isNotEmpty( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) ) )
+		{
+			File file = fileStoreService.getFileMetaData( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
+			if ( file != null )
+			{
+				_${business_class.businessClass?lower_case}.set${attribute.name}( file );
+				String strFileUrl = fileStoreService.getFileDownloadUrlBO( file.getFileKey( ) );
+				_${business_class.businessClass?lower_case}.get${attribute.name}( ).setUrl( strFileUrl );
+			}
+		}
+	    </#if>
+        </#list>
+        </#if>
+
         Map<String, Object> model = getModel(  );
         model.put( MARK_${business_class.businessClass?upper_case}, _${business_class.businessClass?lower_case} );
         model.put( SecurityTokenService.MARK_TOKEN, SecurityTokenService.getInstance( ).getToken( request, ACTION_MODIFY_${business_class.businessClass?upper_case} ) );
@@ -236,9 +331,35 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
      */
     @Action( ACTION_MODIFY_${business_class.businessClass?upper_case} )
     public String doModify${business_class.businessClass}( HttpServletRequest request ) throws AccessDeniedException
-    {
+    {   
         populate( _${business_class.businessClass?lower_case}, request, getLocale( ) );
-
+		
+		<#if hasFile?? && hasFile>
+		IFileStoreServiceProvider fileStoreService = ${business_class.businessClass}Home.getFileStoreServiceProvider( );
+		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+		<#list business_class.attributes as attribute>
+	    <#if attribute.type == "File">
+        FileItem ${attribute.paramName} = multipartRequest.getFile( "${attribute.paramName}" );
+       	_${business_class.businessClass?lower_case}.get${attribute.name}( ).setFileKey( request.getParameter( "${attribute.paramName?uncap_first}Key" ) );
+      
+        if ( ${attribute.paramName} != null && ${attribute.paramName}.getSize( ) > 0 )
+        {	
+            try
+            {
+            	fileStoreService.delete( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
+                String strFileStoreKey = fileStoreService.storeFileItem( ${attribute.paramName} );
+                _${business_class.businessClass?lower_case}.set${attribute.name}( fileStoreService.getFile( strFileStoreKey ) );
+            }
+            catch (Exception e) 
+            {
+            	AppLogService.error( "Erreur de stockage du fichier", e );
+                throw new AppException( "Erreur de stockage du fichier", e );
+            }
+        }
+	    </#if>
+		</#list>
+		</#if>
+		
         if ( !SecurityTokenService.getInstance( ).validate( request, ACTION_MODIFY_${business_class.businessClass?upper_case} ) )
         {
             throw new AccessDeniedException ( "Invalid security token" );
