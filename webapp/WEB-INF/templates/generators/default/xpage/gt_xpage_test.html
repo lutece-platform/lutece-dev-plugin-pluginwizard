@@ -48,11 +48,17 @@ import fr.paris.lutece.portal.web.LocalVariables;
 	<#if attribute.type = "Date">
 		<#assign hasDate = true>
 	</#if>
+	<#if attribute.type = "File">
+		<#assign hasFile = true>
+	</#if>
 </#list>
 <#if hasDate?? && hasDate>
 import java.sql.Date;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.portal.web.l10n.LocaleService;
+</#if>
+<#if hasFile?? && hasFile>
+import fr.paris.lutece.portal.business.file.File;
 </#if>
 import fr.paris.lutece.plugins.${radical_package}.business.${business_class.businessClass};
 import fr.paris.lutece.plugins.${radical_package}.business.${business_class.businessClass}Home;
@@ -79,6 +85,9 @@ public class ${business_class.businessClass}XPageTest extends LuteceTestCase
 <#elseif attribute.type = "Date">
 	private static final ${attribute.type} ${attribute.name?upper_case}1 = new Date( 1000000l );
     private static final ${attribute.type} ${attribute.name?upper_case}2 = new Date( 2000000l );
+<#elseif attribute.type = "File">
+	private static final ${attribute.type} ${attribute.name?upper_case}1 = new File( );
+    private static final ${attribute.type} ${attribute.name?upper_case}2 = new File( );
 <#else>
     private static final ${attribute.type} ${attribute.name?upper_case}1 = 1;
     private static final ${attribute.type} ${attribute.name?upper_case}2 = 2;

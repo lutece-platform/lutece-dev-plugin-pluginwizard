@@ -164,6 +164,7 @@ public class ${business_class.businessClass?cap_first}Rest
         
         ${business_class.businessClass?cap_first} ${business_class.businessClass?lower_case} = new ${business_class.businessClass?cap_first}( );
         <#list business_class.attributes as attribute>
+        	<#if attribute.type != 'File'>
         	<#switch attribute.type>
 	        	<#case "int">
 	    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Integer.parseInt( ${attribute.paramName?lower_case} ) );
@@ -177,6 +178,7 @@ public class ${business_class.businessClass?cap_first}Rest
 	        	<#default>
     	${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( ${attribute.paramName?lower_case} );
 	        </#switch>
+	        </#if>
         </#list>
         ${business_class.businessClass?cap_first}Home.create( ${business_class.businessClass?lower_case} );
         
@@ -242,6 +244,7 @@ public class ${business_class.businessClass?cap_first}Rest
         }
         
         <#list business_class.attributes as attribute>
+        	<#if attribute.type != 'File'>
 	        <#switch attribute.type>
 	        	<#case "int">
 	    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Integer.parseInt( ${attribute.paramName?lower_case} ) );
@@ -255,6 +258,7 @@ public class ${business_class.businessClass?cap_first}Rest
 	        	<#default>
     	${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( ${attribute.paramName?lower_case} );
 	        </#switch>
+	        </#if>
         </#list>
         ${business_class.businessClass?cap_first}Home.update( ${business_class.businessClass?lower_case} );
         

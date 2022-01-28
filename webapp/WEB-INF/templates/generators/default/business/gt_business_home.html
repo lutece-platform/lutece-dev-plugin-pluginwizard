@@ -31,12 +31,25 @@
  *
  * License 1.0
  */
+
+ <#list business_class.attributes as attribute>
+    <#if attribute.type == "File">
+        <#assign hasFile=true>
+    </#if>
+</#list>
+
  package fr.paris.lutece.plugins.${radical_package}.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.util.ReferenceList;
+<#if hasFile?? && hasFile>
+import fr.paris.lutece.portal.service.file.FileService;
+import fr.paris.lutece.portal.service.file.IFileStoreServiceProvider;
+import org.apache.commons.fileupload.FileItem;
+import fr.paris.lutece.portal.business.file.File;
+</#if>
 
 import java.util.List;
 
@@ -48,6 +61,9 @@ public final class ${business_class.businessClass}Home
     // Static variable pointed at the DAO instance
     private static I${business_class.businessClass}DAO _dao = SpringContextService.getBean( "${bean_name}.${business_class.instanceName}DAO" );
     private static Plugin _plugin = PluginService.getPlugin( "${bean_name}" );
+    <#if hasFile?? && hasFile>
+	private static IFileStoreServiceProvider _fileStoreService = FileService.getInstance( ).getFileStoreServiceProvider( );
+	</#if>
 
     /**
      * Private constructor - this class need not be instantiated
@@ -125,5 +141,16 @@ public final class ${business_class.businessClass}Home
     {
         return _dao.select${business_class.businessClass}sReferenceList( _plugin );
     }
+    
+    <#if hasFile?? && hasFile>
+    /**
+     * Load the filteStoreService of the ${business_class.instanceName} objects and returns them as a IFileStoreServiceProvider
+     * @return the filteStoreService of the ${business_class.instanceName} object
+     */
+	public static IFileStoreServiceProvider getFileStoreServiceProvider( )
+    {
+		return _fileStoreService;
+    }
+	</#if>
 }
 
