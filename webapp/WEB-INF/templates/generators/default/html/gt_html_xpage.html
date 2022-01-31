@@ -10,8 +10,8 @@
 	<${macro}boxBody>
 		<${macro}tform class='form-horizontal' action='jsp/site/Portal.jsp?page=${business_class.businessClass?lower_case}'>
 				<${macro}messages errors=errors />
-				<input type="hidden" id="id" name="id"/>
-				<input type="hidden" value="${bra_open}token${bra_close}" name="token" />
+				<${macro}input type="hidden" id="id" name="id"/>
+				<${macro}input type="hidden" value="${bra_open}token${bra_close}" name="token" />
 
 				<#list business_class.attributes as attribute>
           		<${macro}formGroup labelFor='${attribute.paramName}' labelKey='${i18n_open}${plugin_name}.create_${business_class.businessClass?lower_case}.label${attribute.name}${i18n_close}' helpKey='${i18n_open}${plugin_name}.create_${business_class.businessClass?lower_case}.label${attribute.name}.help${i18n_close}' mandatory=true>
@@ -40,8 +40,8 @@
 	<${macro}boxBody>
 		<${macro}tform class='form-horizontal' action='jsp/site/Portal.jsp?page=${business_class.businessClass?lower_case}'>
 				<${macro}messages errors=errors />
-				<input type="hidden" id="id" name="id" value="${bra_open}${business_class.businessClass?lower_case}.id${bra_close}"/>
-				<input type="hidden" value="${bra_open}token${bra_close}" name="token" />
+				<${macro}input type="hidden" id="id" name="id" value="${bra_open}${business_class.businessClass?lower_case}.id${bra_close}"/>
+				<${macro}input type="hidden" value="${bra_open}token${bra_close}" name="token" />
 
 				<#list business_class.attributes as attribute>
 				<${macro}formGroup labelFor='${attribute.paramName}' labelKey='${i18n_open}${plugin_name}.modify_${business_class.businessClass?lower_case}.label${attribute.name}${i18n_close}' mandatory=true>
