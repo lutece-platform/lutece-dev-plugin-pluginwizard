@@ -25,7 +25,7 @@
 				</#list>
         		<${macro}formGroup>
           			<${macro}button name='action_create${business_class.businessClass}' type='submit' tabIndex='${business_class.attributes?size}' title='${i18n_open}portal.util.labelCreate${i18n_close}' buttonIcon='plus' />
-					<${macro}button name='view_manage${business_class.businessClass}s' type='submit' title='${i18n_open}portal.util.labelCancel${i18n_close}' buttonIcon='close' color='btn-secondary' />
+					<${macro}button name='view_manage${business_class.businessClass}s' type='submit' title='${i18n_open}portal.util.labelCancel${i18n_close}' buttonIcon='close' color='btn-secondary' cancel=true />
 				</${macro}formGroup>
         </fieldset>
     </${macro}tform>
@@ -58,7 +58,7 @@
 
 				<${macro}formGroup>
          			<${macro}button name='action_modify${business_class.businessClass}' type='submit' tabIndex='${business_class.attributes?size}' title='${i18n_open}portal.util.labelModify${i18n_close}' buttonIcon='plus' />
-          			<${macro}button name='view_manage${business_class.businessClass}s' type='submit' title='${i18n_open}portal.util.labelCancel${i18n_close}' buttonIcon='close' color='btn-secondary' />
+          			<${macro}button name='view_manage${business_class.businessClass}s' type='submit' title='${i18n_open}portal.util.labelCancel${i18n_close}' buttonIcon='close' color='btn-secondary' cancel=true />
 				</${macro}formGroup>
         	</fieldset>
 		</${macro}tform>
