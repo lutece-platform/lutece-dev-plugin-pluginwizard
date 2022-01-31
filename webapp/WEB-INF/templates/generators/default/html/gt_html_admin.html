@@ -75,7 +75,6 @@
     <div class="clearfix"></div>
     <${macro}table>
         <tr>
-            <input type="hidden" id="id" name="id"/>
             <#list business_class.attributes as attribute>
             <th>${i18n_open}${plugin_name}.manage_${business_class.businessClass?lower_case}s.column${attribute.name}${i18n_close}</th>
             </#list>
@@ -84,7 +83,6 @@
         <${macro}tableHeadBodySeparator />
         <${variable}list ${business_class.businessClass?lower_case}_list as ${business_class.businessClass?lower_case} >
         <tr>
-            <input type="hidden" id="id" name="id"/>
             <#list business_class.attributes as attribute>
             <td>
             <#if attribute.type != "boolean">
