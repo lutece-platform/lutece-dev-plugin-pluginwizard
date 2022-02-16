@@ -96,4 +96,12 @@ public interface I${business_class.businessClass}DAO
      * @return The referenceList which contains the data of all the ${business_class.instanceName} objects
      */
     ReferenceList select${business_class.businessClass}sReferenceList( Plugin plugin );
+    
+    /**
+     * Load the data of all the avant objects and returns them as a list
+     * @param plugin the Plugin
+     * @param listIds liste of ids
+     * @return The list which contains the data of all the avant objects
+     */
+	List&lt;${business_class.businessClass}&gt; select${business_class.businessClass}sListByIds( Plugin _plugin, List<Integer> listIds );
 }
