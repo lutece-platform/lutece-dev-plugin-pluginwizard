@@ -60,6 +60,7 @@ import fr.paris.lutece.portal.service.util.AppLogService;
 import java.sql.Date;
 </#if>
 import java.util.List;
+import java.util.Optional;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -234,37 +235,40 @@ public class ${business_class.businessClass?cap_first}Rest
                     .build( );
         }
         
-        ${business_class.businessClass?cap_first} ${business_class.businessClass?lower_case} = ${business_class.businessClass?cap_first}Home.findByPrimaryKey( id );
-        if ( ${business_class.businessClass?lower_case} == null )
+        Optional<${business_class.businessClass?cap_first}> opt${business_class.businessClass?cap_first} = ${business_class.businessClass?cap_first}Home.findByPrimaryKey( id );
+        if ( !opt${business_class.businessClass?cap_first}.isPresent( ) )
         {
             AppLogService.error( Constants.ERROR_NOT_FOUND_RESOURCE );
             return Response.status( Response.Status.NOT_FOUND )
                     .entity( JsonUtil.buildJsonResponse( new ErrorJsonResponse( Response.Status.NOT_FOUND.name( ), Constants.ERROR_NOT_FOUND_RESOURCE ) ) )
                     .build( );
         }
-        
-        <#list business_class.attributes as attribute>
-        	<#if attribute.type != 'File'>
-	        <#switch attribute.type>
-	        	<#case "int">
-	    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Integer.parseInt( ${attribute.paramName?lower_case} ) );
-	        		<#break>
-	        	<#case "boolean">
-	    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Boolean.parseBoolean( ${attribute.paramName?lower_case} ) );
-	        		<#break>
-	        	<#case "Date">
-	    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Date.valueOf( ${attribute.paramName?lower_case} ) );
-	        		<#break>
-	        	<#default>
-    	${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( ${attribute.paramName?lower_case} );
-	        </#switch>
-	        </#if>
-        </#list>
-        ${business_class.businessClass?cap_first}Home.update( ${business_class.businessClass?lower_case} );
-        
-        return Response.status( Response.Status.OK )
-                .entity( JsonUtil.buildJsonResponse( new JsonResponse( ${business_class.businessClass?lower_case} ) ) )
-                .build( );
+        else
+        {
+        	${business_class.businessClass?cap_first} ${business_class.businessClass?lower_case} = opt${business_class.businessClass?cap_first}.get( );
+	        <#list business_class.attributes as attribute>
+	        	<#if attribute.type != 'File'>
+		        <#switch attribute.type>
+		        	<#case "int">
+		    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Integer.parseInt( ${attribute.paramName?lower_case} ) );
+		        		<#break>
+		        	<#case "boolean">
+		    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Boolean.parseBoolean( ${attribute.paramName?lower_case} ) );
+		        		<#break>
+		        	<#case "Date">
+		    ${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( Date.valueOf( ${attribute.paramName?lower_case} ) );
+		        		<#break>
+		        	<#default>
+	    	${business_class.businessClass?lower_case}.set${attribute.name?cap_first}( ${attribute.paramName?lower_case} );
+		        </#switch>
+		        </#if>
+	        </#list>
+	        ${business_class.businessClass?cap_first}Home.update( ${business_class.businessClass?lower_case} );
+	        
+	        return Response.status( Response.Status.OK )
+	                .entity( JsonUtil.buildJsonResponse( new JsonResponse( ${business_class.businessClass?lower_case} ) ) )
+	                .build( );
+        }
     }
     
     /**
@@ -297,8 +301,8 @@ public class ${business_class.businessClass?cap_first}Rest
      */
     private Response delete${business_class.businessClass?cap_first}V1( Integer id )
     {
-        ${business_class.businessClass?cap_first} ${business_class.businessClass?lower_case} = ${business_class.businessClass?cap_first}Home.findByPrimaryKey( id );
-        if ( ${business_class.businessClass?lower_case} == null )
+        Optional<${business_class.businessClass?cap_first}> opt${business_class.businessClass?cap_first} = ${business_class.businessClass?cap_first}Home.findByPrimaryKey( id );
+        if ( !opt${business_class.businessClass?cap_first}.isPresent( ) )
         {
             AppLogService.error( Constants.ERROR_NOT_FOUND_RESOURCE );
             return Response.status( Response.Status.NOT_FOUND )
@@ -343,8 +347,8 @@ public class ${business_class.businessClass?cap_first}Rest
      */
     private Response get${business_class.businessClass?cap_first}V1( Integer id )
     {
-        ${business_class.businessClass?cap_first} ${business_class.businessClass?lower_case} = ${business_class.businessClass?cap_first}Home.findByPrimaryKey( id );
-        if ( ${business_class.businessClass?lower_case} == null )
+        Optional<${business_class.businessClass?cap_first}> opt${business_class.businessClass?cap_first} = ${business_class.businessClass?cap_first}Home.findByPrimaryKey( id );
+        if ( !opt${business_class.businessClass?cap_first}.isPresent( ) )
         {
             AppLogService.error( Constants.ERROR_NOT_FOUND_RESOURCE );
             return Response.status( Response.Status.NOT_FOUND )
@@ -353,7 +357,7 @@ public class ${business_class.businessClass?cap_first}Rest
         }
         
         return Response.status( Response.Status.OK )
-                .entity( JsonUtil.buildJsonResponse( new JsonResponse( ${business_class.businessClass?lower_case} ) ) )
+                .entity( JsonUtil.buildJsonResponse( new JsonResponse( opt${business_class.businessClass?cap_first}.get( ) ) ) )
                 .build( );
     }
 }

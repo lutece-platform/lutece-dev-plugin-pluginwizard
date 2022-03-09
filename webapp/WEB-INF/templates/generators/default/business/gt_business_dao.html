@@ -50,6 +50,8 @@ import java.util.List;
 <#if hasFile?? && hasFile>
 import fr.paris.lutece.portal.business.file.File;
 </#if>
+import java.util.Optional;
+
 /**
  * This class provides Data Access methods for ${business_class.businessClass} objects
  */
@@ -100,7 +102,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
      * {@inheritDoc }
      */
     @Override
-    public ${business_class.businessClass} load( int nKey, Plugin plugin )
+    public Optional<${business_class.businessClass}> load( int nKey, Plugin plugin )
     {
         try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
@@ -135,7 +137,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
 	            </#list>
 	        }
 	
-	        return ${business_class.instanceName};
+	        return Optional.ofNullable( ${business_class.instanceName} );
         }
     }
 

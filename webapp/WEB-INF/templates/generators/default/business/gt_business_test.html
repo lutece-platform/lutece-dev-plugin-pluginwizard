@@ -36,6 +36,8 @@ package fr.paris.lutece.plugins.${radical_package}.business;
 
 import fr.paris.lutece.test.LuteceTestCase;
 
+import java.util.Optional;
+
 <#list business_class.attributes as attribute>
 	<#if attribute.type = "Date">
 		<#assign hasDate = true>
@@ -88,7 +90,8 @@ public class ${business_class.businessClass}BusinessTest extends LuteceTestCase
 
         // Create test
         ${business_class.businessClass}Home.create( ${business_class.instanceName} );
-        ${business_class.businessClass} ${business_class.instanceName}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
+        Optional<${business_class.businessClass}> opt${business_class.businessClass}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
+        ${business_class.businessClass} ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( new ${business_class.businessClass} ( ) );
         <#list business_class.attributes as attribute>
          <#if attribute.type != "Date">
         assertEquals( ${business_class.instanceName}Stored.get${attribute.name}() , ${business_class.instanceName}.get${attribute.name}( ) );
@@ -102,7 +105,9 @@ public class ${business_class.businessClass}BusinessTest extends LuteceTestCase
         ${business_class.instanceName}.set${attribute.name}( ${attribute.name?upper_case}2 );
         </#list>
         ${business_class.businessClass}Home.update( ${business_class.instanceName} );
-        ${business_class.instanceName}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
+        opt${business_class.businessClass}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
+        ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( new ${business_class.businessClass} ( ) );
+        
         <#list business_class.attributes as attribute>
         <#if attribute.type != "Date">
         assertEquals( ${business_class.instanceName}Stored.get${attribute.name}() , ${business_class.instanceName}.get${attribute.name}( ) );
@@ -116,7 +121,8 @@ public class ${business_class.businessClass}BusinessTest extends LuteceTestCase
 
         // Delete test
         ${business_class.businessClass}Home.remove( ${business_class.instanceName}.getId( ) );
-        ${business_class.instanceName}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
+        opt${business_class.businessClass}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
+        ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( new ${business_class.businessClass} ( ) );
         assertNull( ${business_class.instanceName}Stored );
         
     }

@@ -51,7 +51,9 @@ import org.apache.commons.fileupload.FileItem;
 import fr.paris.lutece.portal.business.file.File;
 </#if>
 
+
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This class provides instances management methods (create, find, ...) for ${business_class.businessClass} objects
@@ -110,7 +112,7 @@ public final class ${business_class.businessClass}Home
      * @param nKey The ${business_class.instanceName} primary key
      * @return an instance of ${business_class.businessClass}
      */
-    public static ${business_class.businessClass} findByPrimaryKey( int nKey )
+    public static Optional<${business_class.businessClass}> findByPrimaryKey( int nKey )
     {
         return _dao.load( nKey, _plugin );
     }
