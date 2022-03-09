@@ -37,6 +37,7 @@ package fr.paris.lutece.plugins.${radical_package}.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * I${business_class.businessClass}DAO Interface
@@ -73,7 +74,7 @@ public interface I${business_class.businessClass}DAO
      * @param plugin the Plugin
      * @return The instance of the ${business_class.instanceName}
      */
-    ${business_class.businessClass} load( int nKey, Plugin plugin );
+    Optional<${business_class.businessClass}> load( int nKey, Plugin plugin );
 
     /**
      * Load the data of all the ${business_class.instanceName} objects and returns them as a list

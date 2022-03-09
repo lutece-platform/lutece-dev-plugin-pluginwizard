@@ -51,6 +51,7 @@ import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
+import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
@@ -58,6 +59,7 @@ import fr.paris.lutece.util.url.UrlItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 <#if hasFile?? && hasFile>
 import fr.paris.lutece.portal.service.util.AppException;
@@ -119,6 +121,9 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
     private static final String INFO_${business_class.businessClass?upper_case}_CREATED = "${msg}.info.${business_class.businessClass?lower_case}.created";
     private static final String INFO_${business_class.businessClass?upper_case}_UPDATED = "${msg}.info.${business_class.businessClass?lower_case}.updated";
     private static final String INFO_${business_class.businessClass?upper_case}_REMOVED = "${msg}.info.${business_class.businessClass?lower_case}.removed";
+    
+    // Errors
+    private static final String ERROR_RESOURCE_NOT_FOUND = "Resource not found";
     
     // Session variable to store working values
     private ${business_class.businessClass} _${business_class.businessClass?lower_case};
@@ -262,7 +267,8 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
         <#if hasFile?? && hasFile>
         if ( _${business_class.businessClass?lower_case} == null || ( _${business_class.businessClass?lower_case}.getId(  ) != nId ) )
         {
-            _${business_class.businessClass?lower_case} = ${business_class.businessClass}Home.findByPrimaryKey( nId );
+            Optional<${business_class.businessClass}> opt${business_class.businessClass} = ${business_class.businessClass}Home.findByPrimaryKey( nId );
+            _${business_class.businessClass?lower_case} = opt${business_class.businessClass}.orElseThrow( ( ) -> new AppException(ERROR_RESOURCE_NOT_FOUND ) );
         }
         IFileStoreServiceProvider fileStoreService = ${business_class.businessClass}Home.getFileStoreServiceProvider( );
 		<#list business_class.attributes as attribute>
@@ -294,7 +300,8 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
 
         if ( _${business_class.businessClass?lower_case} == null || ( _${business_class.businessClass?lower_case}.getId(  ) != nId ) )
         {
-            _${business_class.businessClass?lower_case} = ${business_class.businessClass}Home.findByPrimaryKey( nId );
+            Optional<${business_class.businessClass}> opt${business_class.businessClass} = ${business_class.businessClass}Home.findByPrimaryKey( nId );
+            _${business_class.businessClass?lower_case} = opt${business_class.businessClass}.orElseThrow( ( ) -> new AppException(ERROR_RESOURCE_NOT_FOUND ) );
         }
 
 		<#if hasFile?? && hasFile>
