@@ -76,7 +76,6 @@ public final class PluginModelDAO implements IPluginModelDAO
             }
 
             nKey = daoUtil.getInt( 1 ) + 1;
-            daoUtil.free( );
 
             return nKey;
         }
@@ -113,7 +112,6 @@ public final class PluginModelDAO implements IPluginModelDAO
             daoUtil.setString( 14, pluginModel.getPluginDbPoolRequired( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -157,8 +155,6 @@ public final class PluginModelDAO implements IPluginModelDAO
                 // //TODO Portlets pluginModel.setPluginPortlets( PluginPortletHome.findByPlugin( nId, plugin ) );
             }
 
-            daoUtil.free( );
-
             return pluginModel;
         }
     }
@@ -177,7 +173,6 @@ public final class PluginModelDAO implements IPluginModelDAO
         {
             daoUtil.setInt( 1, nPluginModelId );
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -211,7 +206,6 @@ public final class PluginModelDAO implements IPluginModelDAO
             daoUtil.setInt( 15, pluginModel.getIdPlugin( ) );
 
             daoUtil.executeUpdate( );
-            daoUtil.free( );
         }
     }
 
@@ -251,8 +245,6 @@ public final class PluginModelDAO implements IPluginModelDAO
                 pluginModelList.add( pluginModel );
             }
 
-            daoUtil.free( );
-
             return pluginModelList;
         }
     }
@@ -280,8 +272,6 @@ public final class PluginModelDAO implements IPluginModelDAO
                 nPluginId = daoUtil.getInt( 1 );
             }
 
-            daoUtil.free( );
-
             return nPluginId;
         }
     }
@@ -308,8 +298,6 @@ public final class PluginModelDAO implements IPluginModelDAO
             {
                 nCount = daoUtil.getInt( 1 );
             }
-
-            daoUtil.free( );
 
             if ( nCount > 0 )
             {
