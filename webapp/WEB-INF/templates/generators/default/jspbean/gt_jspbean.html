@@ -239,7 +239,9 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
             try
             {
                 String strFileStoreKey = fileStoreService.storeFileItem( ${attribute.paramName} );
-                _${business_class.businessClass?lower_case}.set${attribute.name}( fileStoreService.getFile( strFileStoreKey ) );
+                File file = new File( );
+                file.setFileKey( strFileStoreKey );
+                _${business_class.businessClass?lower_case}.set${attribute.name}( file );
             }
             catch (Exception e) 
             {
@@ -391,7 +393,9 @@ public class ${business_class.businessClass}JspBean extends Abstract${feature_na
             {
             	fileStoreService.delete( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
                 String strFileStoreKey = fileStoreService.storeFileItem( ${attribute.paramName} );
-                _${business_class.businessClass?lower_case}.set${attribute.name}( fileStoreService.getFile( strFileStoreKey ) );
+                File file = new File( );
+                file.setFileKey( strFileStoreKey );
+                _${business_class.businessClass?lower_case}.set${attribute.name}( file );
             }
             catch (Exception e) 
             {
