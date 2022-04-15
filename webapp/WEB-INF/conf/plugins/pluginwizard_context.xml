@@ -236,14 +236,14 @@
    <bean id="pluginwizard.generator.lutece6.pom" class="fr.paris.lutece.plugins.pluginwizard.service.generator.PomGenerator">
       <property name="template" value="/generators/default/xml/gt_xml_pom_file.html" />
       <property name="modelVersion" value="4.0.0" />
-	  <property name="globalPomVersion" value="4.0.4" />
+	  <property name="globalPomVersion" value="5.1.2" />
 	  <property name="dependencyCoreVersion" value="[6.0.0,6.9.9)" />
 	  <property name="dependencyRestVersion" value="3.0.0" />
    </bean>
    <bean id="pluginwizard.generator.lutece7.pom" class="fr.paris.lutece.plugins.pluginwizard.service.generator.PomGenerator">
       <property name="template" value="/generators/default/xml/gt_xml_pom_file.html" />
       <property name="modelVersion" value="4.0.0" />
-	  <property name="globalPomVersion" value="5.2.1" />
+	  <property name="globalPomVersion" value="6.0.0" />
 	  <property name="dependencyCoreVersion" value="[7.0.0,)" />
 	  <property name="dependencyRestVersion" value="3.0.0" />
    </bean>
