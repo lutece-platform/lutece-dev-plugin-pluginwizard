@@ -42,11 +42,11 @@ import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.admin.AdminAuthenticationService;
 import fr.paris.lutece.portal.service.security.UserNotSignedException;
 import java.util.List;
+import java.io.IOException;
 import fr.paris.lutece.test.LuteceTestCase;
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
 <#if business_class??>
 import fr.paris.lutece.portal.web.LocalVariables;
-import java.io.IOException;
 import fr.paris.lutece.plugins.${radical_package}.business.${business_class.businessClass};
 import fr.paris.lutece.plugins.${radical_package}.business.${business_class.businessClass}Home;
 <#list business_class.attributes as attribute>
@@ -63,7 +63,14 @@ import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.portal.web.l10n.LocaleService;
 </#if>
 <#if hasFile?? && hasFile>
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import java.util.ArrayList;
+import org.apache.commons.fileupload.FileItem;
+import java.io.IOException;
 import fr.paris.lutece.portal.business.file.File;
+import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 </#if>
 /**
  * This is the business class test for the object ${business_class.businessClass}
@@ -97,7 +104,7 @@ public class ${business_class.businessClass}JspBeanTest extends LuteceTestCase
 </#if>
 </#list>
 
-public void testJspBeans(  ) throws AccessDeniedException
+public void testJspBeans(  ) throws AccessDeniedException, IOException
 	{	
      	MockHttpServletRequest request = new MockHttpServletRequest();
 		MockHttpServletResponse response = new MockHttpServletResponse();
@@ -115,7 +122,49 @@ public void testJspBeans(  ) throws AccessDeniedException
 		//action create ${business_class.businessClass}
 		request = new MockHttpServletRequest();
 
-		<#list business_class.attributes as attribute>
+		response = new MockHttpServletResponse( );
+		AdminUser adminUser = new AdminUser( );
+		adminUser.setAccessCode( "admin" );
+		
+		<#if hasFile?? && hasFile>
+		Map<String, String [ ]> parameters = new HashMap<>( );
+        parameters.put( "token", new String [ ] {
+        		SecurityTokenService.getInstance( ).getToken( request, "create${business_class.businessClass}" )
+        } );
+        parameters.put( "action", new String [ ] {
+        		"create${business_class.businessClass}"
+        } );
+        <#list business_class.attributes as attribute>
+        <#if attribute.type != "File">
+        parameters.put( "${attribute.paramName}", new String [ ] {
+		<#if attribute.type = "String">
+        ${attribute.name?upper_case}1
+        <#elseif attribute.type = "Date">
+        DateUtil.getDateString( ${attribute.name?upper_case}1, LocaleService.getDefault( ) )
+        <#else>
+        String.valueOf( ${attribute.name?upper_case}1)
+        </#if>
+        } );
+        </#if>
+		</#list>
+        
+        Map<String, List<FileItem>> multipartFiles = new HashMap<>( );
+        
+        List<FileItem> items = new ArrayList<>( );
+        
+        <#list business_class.attributes as attribute>
+		<#if attribute.type = "File">
+        FileItem ${attribute.paramName} = new DiskFileItemFactory( ).createItem( "${attribute.paramName}", "text/plain", true, "${attribute.paramName}" );
+        ${attribute.paramName}.getOutputStream( ).write( "something".getBytes( ) );
+        items.add( ${attribute.paramName} );
+        multipartFiles.put( "${attribute.paramName}", items );
+        </#if>
+		</#list>
+
+        MultipartHttpServletRequest requestMultipart = new MultipartHttpServletRequest(request, multipartFiles, parameters);
+        <#else>
+        
+        <#list business_class.attributes as attribute>
 		<#if attribute.type = "String">
         request.addParameter( "${attribute.paramName}" , ${attribute.name?upper_case}1 );
         <#elseif attribute.type = "Date">
@@ -127,14 +176,19 @@ public void testJspBeans(  ) throws AccessDeniedException
 		request.addParameter("action","create${business_class.businessClass}");
         request.addParameter( "token", SecurityTokenService.getInstance( ).getToken( request, "create${business_class.businessClass}" ));
 		request.setMethod( "POST" );
-		response = new MockHttpServletResponse( );
-		AdminUser adminUser = new AdminUser( );
-		adminUser.setAccessCode( "admin" );
-
+        
+		</#if>
+		
 		try 
 		{
+			<#if hasFile?? && hasFile>
+			AdminAuthenticationService.getInstance( ).registerUser(requestMultipart, adminUser);
+			html = jspbean.processController( requestMultipart, response ); 
+			<#else>
 			AdminAuthenticationService.getInstance( ).registerUser(request, adminUser);
 			html = jspbean.processController( request, response ); 
+			</#if>
+			
 			
 			// MockResponse object does not redirect, result is always null
 			assertNull( html );
@@ -155,7 +209,7 @@ public void testJspBeans(  ) throws AccessDeniedException
         request.addParameter( "${attribute.paramName}" , ${attribute.name?upper_case}1 );
         <#elseif attribute.type = "Date">
         request.addParameter( "${attribute.paramName}" , DateUtil.getDateString( ${attribute.name?upper_case}1, LocaleService.getDefault( ) ) );
-        <#else>
+        <#elseif attribute.type != "File">
         request.addParameter( "${attribute.paramName}" , String.valueOf( ${attribute.name?upper_case}1) );
         </#if>
 		</#list>
@@ -163,13 +217,41 @@ public void testJspBeans(  ) throws AccessDeniedException
         assertTrue( !listIds.isEmpty( ) );
         request.addParameter( "id", String.valueOf( listIds.get( 0 ) ) );
 		jspbean = new ${business_class.businessClass}JspBean();
-
-		assertNotNull( jspbean.getModify${business_class.businessClass}( request ) );
+		
+		assertNotNull( jspbean.getModify${business_class.businessClass}( request ) );	
 
 		//action modify ${business_class.businessClass}
 		request = new MockHttpServletRequest();
 		response = new MockHttpServletResponse();
-		<#list business_class.attributes as attribute>
+		
+		adminUser = new AdminUser();
+		adminUser.setAccessCode("admin");
+		
+		<#if hasFile?? && hasFile>
+		parameters = new HashMap<>( );
+        parameters.put( "action", new String [ ] {
+        		"modify${business_class.businessClass}"
+        } );
+        parameters.put( "token", new String [ ] {
+        		SecurityTokenService.getInstance( ).getToken( request, "modify${business_class.businessClass}" )
+        } );
+        <#list business_class.attributes as attribute>
+        <#if attribute.type != "File">
+        parameters.put( "${attribute.paramName}", new String [ ] {
+		<#if attribute.type = "String">
+        ${attribute.name?upper_case}2
+        <#elseif attribute.type = "Date">
+        DateUtil.getDateString( ${attribute.name?upper_case}2, LocaleService.getDefault( ) )
+        <#else>
+        String.valueOf( ${attribute.name?upper_case}1)
+        </#if>
+        } );
+        </#if>
+		</#list>
+
+        requestMultipart = new MultipartHttpServletRequest(request, new HashMap<>( ), parameters);
+        <#else>
+        <#list business_class.attributes as attribute>
 		<#if attribute.type = "String">
         request.addParameter( "${attribute.paramName}" , ${attribute.name?upper_case}2 );
         <#elseif attribute.type = "Date">
@@ -182,13 +264,17 @@ public void testJspBeans(  ) throws AccessDeniedException
 		//important pour que MVCController sache quelle action effectuer, sinon, il redirigera vers create${business_class.businessClass}, qui est l'action par défaut
 		request.addParameter("action","modify${business_class.businessClass}");
 		request.addParameter( "token", SecurityTokenService.getInstance( ).getToken( request, "modify${business_class.businessClass}" ));
-		adminUser = new AdminUser();
-		adminUser.setAccessCode("admin");
+		</#if>
 
 		try 
 		{
+			<#if hasFile?? && hasFile>
+			AdminAuthenticationService.getInstance( ).registerUser(requestMultipart, adminUser);
+			html = jspbean.processController( requestMultipart, response );
+			<#else>
 			AdminAuthenticationService.getInstance( ).registerUser(request, adminUser);
-			html = jspbean.processController( request, response ); 
+			html = jspbean.processController( request, response );
+			</#if> 
 
 			// MockResponse object does not redirect, result is always null
 			assertNull( html );

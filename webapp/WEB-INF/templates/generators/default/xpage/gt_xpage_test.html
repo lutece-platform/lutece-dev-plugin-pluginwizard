@@ -39,6 +39,7 @@ import fr.paris.lutece.test.LuteceTestCase;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletConfig;
+import java.io.IOException;
 <#if business_class??>
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import java.util.List;
@@ -58,7 +59,13 @@ import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.portal.web.l10n.LocaleService;
 </#if>
 <#if hasFile?? && hasFile>
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import java.util.ArrayList;
+import org.apache.commons.fileupload.FileItem;
 import fr.paris.lutece.portal.business.file.File;
+import fr.paris.lutece.portal.web.upload.MultipartHttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 </#if>
 import fr.paris.lutece.plugins.${radical_package}.business.${business_class.businessClass};
 import fr.paris.lutece.plugins.${radical_package}.business.${business_class.businessClass}Home;
@@ -94,7 +101,7 @@ public class ${business_class.businessClass}XPageTest extends LuteceTestCase
 </#if>
 </#list>
 
-public void testXPage(  ) throws AccessDeniedException
+public void testXPage(  ) throws AccessDeniedException, IOException
 	{
         // Xpage create test
         MockHttpServletRequest request = new MockHttpServletRequest( );
@@ -109,6 +116,45 @@ public void testXPage(  ) throws AccessDeniedException
 		
 		LocalVariables.setLocal(config, request, response);
 		
+		<#if hasFile?? && hasFile>
+		Map<String, String [ ]> parameters = new HashMap<>( );
+        parameters.put( "token", new String [ ] {
+        		SecurityTokenService.getInstance( ).getToken( request, "create${business_class.instanceName?cap_first}" )
+        } );
+        parameters.put( "action", new String [ ] {
+        		"create${business_class.instanceName?cap_first}"
+        } );
+        <#list business_class.attributes as attribute>
+        <#if attribute.type != "File">
+        parameters.put( "${attribute.paramName}", new String [ ] {
+		<#if attribute.type = "String">
+        ${attribute.name?upper_case}1
+        <#elseif attribute.type = "Date">
+        DateUtil.getDateString( ${attribute.name?upper_case}1, LocaleService.getDefault( ) )
+        <#else>
+        String.valueOf( ${attribute.name?upper_case}1)
+        </#if>
+        } );
+        </#if>
+		</#list>
+        
+        Map<String, List<FileItem>> multipartFiles = new HashMap<>( );
+        
+        List<FileItem> items = new ArrayList<>( );
+        
+        <#list business_class.attributes as attribute>
+		<#if attribute.type = "File">
+        FileItem ${attribute.paramName} = new DiskFileItemFactory( ).createItem( "${attribute.paramName}", "text/plain", true, "${attribute.paramName}" );
+        ${attribute.paramName}.getOutputStream( ).write( "something".getBytes( ) );
+        items.add( ${attribute.paramName} );
+        multipartFiles.put( "${attribute.paramName}", items );
+        </#if>
+		</#list>
+
+        MultipartHttpServletRequest requestMultipart = new MultipartHttpServletRequest(request, multipartFiles, parameters);
+
+        assertNotNull( xpage.doCreate${business_class.instanceName?cap_first}( requestMultipart ) );
+		<#else>
 		request.addParameter( "action" , "create${business_class.instanceName?cap_first}" );
 		<#list business_class.attributes as attribute>
 		<#if attribute.type = "String">
@@ -120,9 +166,11 @@ public void testXPage(  ) throws AccessDeniedException
         </#if>
 		</#list>
 		request.setMethod( "POST" );
-        
-        assertNotNull( xpage.doCreate${business_class.instanceName?cap_first}( request ) );
-
+		
+		assertNotNull( xpage.doCreate${business_class.instanceName?cap_first}( request ) );
+		</#if>
+		
+		
 		//modify ${business_class.businessClass}	
 		List<Integer> listIds = ${business_class.businessClass}Home.getId${business_class.businessClass}sList(); 
 
@@ -136,6 +184,33 @@ public void testXPage(  ) throws AccessDeniedException
 		response = new MockHttpServletResponse();
 		request = new MockHttpServletRequest();
 		LocalVariables.setLocal(config, request, response);
+		
+		<#if hasFile?? && hasFile>
+		parameters = new HashMap<>( );
+        parameters.put( "token", new String [ ] {
+        		SecurityTokenService.getInstance( ).getToken( request, "modify${business_class.businessClass}" )
+        } );
+        parameters.put( "id", new String [ ] {
+        		String.valueOf( listIds.get( 0 ) )
+        } );
+        <#list business_class.attributes as attribute>
+        <#if attribute.type != "File">
+        parameters.put( "${attribute.paramName}", new String [ ] {
+		<#if attribute.type = "String">
+        ${attribute.name?upper_case}1
+        <#elseif attribute.type = "Date">
+        DateUtil.getDateString( ${attribute.name?upper_case}1, LocaleService.getDefault( ) )
+        <#else>
+        String.valueOf( ${attribute.name?upper_case}1)
+        </#if>
+        } );
+        </#if>
+		</#list>
+
+        requestMultipart = new MultipartHttpServletRequest(request, new HashMap<>( ), parameters);
+
+        assertNotNull( xpage.doModify${business_class.businessClass}( requestMultipart ) );
+		<#else>
 		<#list business_class.attributes as attribute>
 		<#if attribute.type = "String">
         request.addParameter( "${attribute.paramName}" , ${attribute.name?upper_case}2 );
@@ -148,7 +223,9 @@ public void testXPage(  ) throws AccessDeniedException
 
 		request.addParameter( "token", SecurityTokenService.getInstance( ).getToken( request, "modify${business_class.businessClass}" ));
 		request.addParameter( "id", String.valueOf( listIds.get( 0 ) ) );
+		
 		assertNotNull( xpage.doModify${business_class.businessClass}( request ) );
+		</#if>
 
 		//do confirm remove ${business_class.businessClass}
 		request = new MockHttpServletRequest();
