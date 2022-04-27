@@ -93,10 +93,12 @@ public class ${business_class.businessClass}BusinessTest extends LuteceTestCase
         Optional<${business_class.businessClass}> opt${business_class.businessClass}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
         ${business_class.businessClass} ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( new ${business_class.businessClass} ( ) );
         <#list business_class.attributes as attribute>
-         <#if attribute.type != "Date">
-        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}() , ${business_class.instanceName}.get${attribute.name}( ) );
-        <#elseif attribute.type = "Date">
-        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}().toString() , ${business_class.instanceName}.get${attribute.name}( ).toString() );
+        <#if attribute.type = "Date">
+        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}( ).toString() , ${business_class.instanceName}.get${attribute.name}( ).toString( ) );
+        <#elseif attribute.type = "File">
+        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}( ).getFileKey( ) , ${business_class.instanceName}.get${attribute.name}( ).getFileKey( ) );
+        <#else>
+        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}( ) , ${business_class.instanceName}.get${attribute.name}( ) );
         </#if>
         </#list>
 
@@ -109,10 +111,12 @@ public class ${business_class.businessClass}BusinessTest extends LuteceTestCase
         ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( new ${business_class.businessClass} ( ) );
         
         <#list business_class.attributes as attribute>
-        <#if attribute.type != "Date">
-        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}() , ${business_class.instanceName}.get${attribute.name}( ) );
-        <#elseif attribute.type = "Date">
-        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}().toString() , ${business_class.instanceName}.get${attribute.name}( ).toString() );
+        <#if attribute.type = "Date">
+        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}( ).toString( ) , ${business_class.instanceName}.get${attribute.name}( ).toString( ) );
+        <#elseif attribute.type = "File">
+        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}( ).getFileKey( ) , ${business_class.instanceName}.get${attribute.name}( ).getFileKey( ) );
+        <#else>
+        assertEquals( ${business_class.instanceName}Stored.get${attribute.name}( ) , ${business_class.instanceName}.get${attribute.name}( ) );
         </#if>
         </#list>
 
@@ -122,7 +126,7 @@ public class ${business_class.businessClass}BusinessTest extends LuteceTestCase
         // Delete test
         ${business_class.businessClass}Home.remove( ${business_class.instanceName}.getId( ) );
         opt${business_class.businessClass}Stored = ${business_class.businessClass}Home.findByPrimaryKey( ${business_class.instanceName}.getId( ) );
-        ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( new ${business_class.businessClass} ( ) );
+        ${business_class.instanceName}Stored = opt${business_class.businessClass}Stored.orElse( null );
         assertNull( ${business_class.instanceName}Stored );
         
     }
