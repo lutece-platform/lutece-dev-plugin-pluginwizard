@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,13 +33,13 @@
  */
 package fr.paris.lutece.plugins.pluginwizard.business.model;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
