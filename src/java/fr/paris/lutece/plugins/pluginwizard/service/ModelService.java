@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -696,7 +696,7 @@ public final class ModelService
 
                 BusinessClass newBusinessClass = null;
                 List<Attribute> attrList = bc.getAttributes( );
-                
+
                 try
                 {
                     newBusinessClass = _mapper.readValue( _mapper.writeValueAsString( businessClass ), bc.getClass( ) );
@@ -706,8 +706,8 @@ public final class ModelService
 
                     throw new AppException( "JSON parsing error", e );
                 }
-                
-                if (attrList != null && !attrList.isEmpty( ) )
+
+                if ( attrList != null && !attrList.isEmpty( ) )
                 {
                     newBusinessClass.setAttributes( attrList );
                 }

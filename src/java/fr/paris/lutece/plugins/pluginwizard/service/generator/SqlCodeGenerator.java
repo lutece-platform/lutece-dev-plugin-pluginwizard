@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2020, City of Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,16 +63,17 @@ public class SqlCodeGenerator extends AbstractGenerator
 
         for ( int i = 0; i < _prefix.length; i++ )
         {
-        	if(_suffix[i].equals("_portlet.sql") && !pm.getPortlets().isEmpty()) {
+            if ( _suffix [i].equals( "_portlet.sql" ) && !pm.getPortlets( ).isEmpty( ) )
+            {
                 String strSqlFile = getSqlFileName( pm.getPluginName( ).toLowerCase( ), i );
-                
+
                 String strPath = getFilePath( pm, PATH, strSqlFile );
 
                 String strSourceCode = getSqlScript( pm, i );
                 strSourceCode = strSourceCode.replace( "&lt;", "<" );
                 strSourceCode = strSourceCode.replace( "&gt;", ">" );
                 map.put( strPath, strSourceCode );
-        	}
+            }
         }
 
         return map;
