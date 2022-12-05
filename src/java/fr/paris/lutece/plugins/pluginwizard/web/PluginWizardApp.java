@@ -45,6 +45,7 @@ import fr.paris.lutece.plugins.pluginwizard.business.model.Portlet;
 import fr.paris.lutece.plugins.pluginwizard.business.model.Rest;
 import fr.paris.lutece.plugins.pluginwizard.service.MapperService;
 import fr.paris.lutece.plugins.pluginwizard.service.ModelService;
+import fr.paris.lutece.plugins.pluginwizard.service.QualityService;
 import fr.paris.lutece.plugins.pluginwizard.service.generator.GeneratorService;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.BusinessClassFormBean;
 import fr.paris.lutece.plugins.pluginwizard.web.formbean.DescriptionFormBean;
@@ -223,6 +224,7 @@ public class PluginWizardApp extends MVCApplication implements Serializable
     public static final String ERROR_LOAD_PLUGIN = "pluginwizard.error.plugin.file";
     public static final String ERROR_MODULE_NAME = "pluginwizard.error.module.name.pattern";
     public static final String ERROR_PLUGIN_NAME = "pluginwizard.error.plugin.name.pattern";
+    public static final String ERROR_FEATURE_DUPLICATE = "pluginwizard.error.feature.right.duplicate";
 
     // NOTIFICATIONS
     public static final String INFO_SESSION_EXPIRED = "pluginwizard.info.sessionExpired";
@@ -591,12 +593,21 @@ public class PluginWizardApp extends MVCApplication implements Serializable
         {
             return redirectView( request, VIEW_CREATE_ADMIN_FEATURE );
         }
+               
+        else if ( QualityService.existsDuplicateFeatureRight( _feature, ModelService.getPluginModel(_nPluginId).getFeatures()))
+        {
+        	addError(ERROR_FEATURE_DUPLICATE, getLocale( request ));
+        	return redirectView( request, VIEW_CREATE_ADMIN_FEATURE );
+        }
 
-        ModelService.addFeature( _nPluginId, _feature );
-        _feature = null;
-        addInfo( INFO_FEATURE_CREATED, getLocale( request ) );
-
-        return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );
+        else 
+        {
+	        ModelService.addFeature( _nPluginId, _feature );
+	        _feature = null;
+	        addInfo( INFO_FEATURE_CREATED, getLocale( request ) );
+	
+	        return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );
+        }
     }
 
     /**
@@ -613,17 +624,26 @@ public class PluginWizardApp extends MVCApplication implements Serializable
 
         List<Integer> listBusinessClasses = getBusinessClasses( request );
         _feature.setIdBusinessClasses( listBusinessClasses );
-
+        
         if ( !validateBean( _feature, getLocale( request ) ) )
         {
             return redirect( request, VIEW_MODIFY_ADMIN_FEATURE, PARAM_FEATURE_ID, _feature.getId( ) );
         }
+                
+        else if ( QualityService.existsDuplicateFeatureRight( _feature, ModelService.getPluginModel(_nPluginId).getFeatures()))
+        {
+        	addError(ERROR_FEATURE_DUPLICATE, getLocale( request ));
+        	return redirect( request, VIEW_MODIFY_ADMIN_FEATURE, PARAM_FEATURE_ID, _feature.getId( ) );
+        }
 
-        ModelService.updateFeature( _nPluginId, _feature );
-        _feature = null;
-        addInfo( INFO_FEATURE_UPDATED, getLocale( request ) );
+        else 
+        {
+            ModelService.updateFeature( _nPluginId, _feature );
+            _feature = null;
+            addInfo( INFO_FEATURE_UPDATED, getLocale( request ) );
 
-        return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );
+            return redirectView( request, VIEW_MANAGE_ADMIN_FEATURES );	
+        }
     }
 
     /**
