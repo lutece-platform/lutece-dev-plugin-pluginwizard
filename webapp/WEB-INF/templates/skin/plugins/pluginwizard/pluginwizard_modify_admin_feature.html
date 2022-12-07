@@ -25,29 +25,32 @@
 							 <div class="form-group">
 								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureTitle} : </label>                           
 								<div class="col-md-9">
-									<input class="form-control input-md" type="text" name="feature_title" value="${feature.featureTitle}" />
+									<input class="form-control input-md autocorrect" type="text" name="feature_title" value="${feature.featureTitle}" />
+									<span class="help-block">#i18n{pluginwizard.pluginwizard_admin_feature_title.help}</span>
 								</div>
 							</div>
 
 							<div class="form-group">
 								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureDescription} : </label>                        
-								<div class="col-md-9">                                                                                       
-									 <input class="form-control input-md" type="text" name="feature_description" value="${feature.featureDescription}" />                               
+								<div class="col-md-9">
+									<input class="form-control input-md autocorrect" type="text" name="feature_description" value="${feature.featureDescription}" />                                                            
+									<span class="help-block">#i18n{pluginwizard.pluginwizard_admin_feature_description.help}</span>
 								</div>    
 							</div>
 
 							<div class="form-group">
 								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureName} :                            
 								</label>                               
-								<div class="col-md-9">                                                              	                              
-									 <input class="form-control input-md" type="text" name="feature_name" value="${feature.featureName}" /> 				                                                                        
+								<div class="col-md-9">
+									 <input class="form-control input-md autocorrect" type="text" name="feature_name" value="${feature.featureName}" data-pattern="${admin_feature_name_pattern}" />
+									 <span class="help-block">#i18n{pluginwizard.pluginwizard_admin_feature_name.help}</span>
 								</div>         	  				                     
 							</div>   
 
 							<div class="form-group">
 								<label class="col-md-3 control-label">#i18n{pluginwizard.pluginwizard_modify_admin_feature.labelFeatureManagement} : </label>                     
 								<div class="col-md-9">               
-									<input class="form-control input-md" type="text" name="feature_right" value="${feature.featureRight}" />                                 
+									<input class="form-control input-md autocorrect" type="text" name="feature_right" value="${feature.featureRight}" data-pattern="${admin_feature_right_pattern}" />                                 
 								</div> 
 							</div>
 
