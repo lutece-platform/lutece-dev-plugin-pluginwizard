@@ -46,7 +46,7 @@ import java.util.ArrayList
 const val SQL_QUERY_SELECT = "SELECT ${business_class.primaryKey}<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> FROM ${business_class.businessTableName} WHERE ${business_class.primaryKey} = ?"
 const val SQL_QUERY_INSERT = "INSERT INTO ${business_class.businessTableName} ( <#if business_class.attributes??><#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> ) VALUES ( <#if business_class.attributes??><#list business_class.attributes as attribute>?<#if attribute_has_next>, </#if></#list></#if> ) "
 const val SQL_QUERY_DELETE = "DELETE FROM ${business_class.businessTableName} WHERE ${business_class.primaryKey} = ? "
-const val SQL_QUERY_UPDATE = "UPDATE ${business_class.businessTableName} SET ${business_class.primaryKey} = ?<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName} = ?<#if attribute_has_next>, </#if></#list></#if> WHERE ${business_class.primaryKey} = ?"
+const val SQL_QUERY_UPDATE = "UPDATE ${business_class.businessTableName} SET <#if business_class.attributes??><#list business_class.attributes as attribute>${attribute.attributeName} = ?<#if attribute_has_next>, </#if></#list></#if> WHERE ${business_class.primaryKey} = ?"
 const val SQL_QUERY_SELECTALL = "SELECT ${business_class.primaryKey}<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> FROM ${business_class.businessTableName}"
 const val SQL_QUERY_SELECTALL_ID = "SELECT ${business_class.primaryKey} FROM ${business_class.businessTableName}"
 
@@ -134,9 +134,7 @@ public final class ${business_class.businessClass}DAO
         val daoUtil = DAOUtil( SQL_QUERY_UPDATE, plugin )
         var nIndex = 0 
         
-        
-        daoUtil.setInt( ++nIndex , ${business_class.instanceName}.id )
-        <#list business_class.attributes as attribute>
+		<#list business_class.attributes as attribute>
         daoUtil.set${attribute.type?cap_first}( ++nIndex , ${business_class.instanceName}.${attribute.javaName} )
         </#list>
         daoUtil.setInt( nIndex , ${business_class.instanceName}.id )

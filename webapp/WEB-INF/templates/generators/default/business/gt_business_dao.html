@@ -61,7 +61,7 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
     private static final String SQL_QUERY_SELECT = "SELECT ${business_class.primaryKey}<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> FROM ${business_class.businessTableName} WHERE ${business_class.primaryKey} = ?";
     private static final String SQL_QUERY_INSERT = "INSERT INTO ${business_class.businessTableName} ( <#if business_class.attributes??><#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> ) VALUES ( <#if business_class.attributes??><#list business_class.attributes as attribute>?<#if attribute_has_next>, </#if></#list></#if> ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM ${business_class.businessTableName} WHERE ${business_class.primaryKey} = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE ${business_class.businessTableName} SET ${business_class.primaryKey} = ?<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName} = ?<#if attribute_has_next>, </#if></#list></#if> WHERE ${business_class.primaryKey} = ?";
+    private static final String SQL_QUERY_UPDATE = "UPDATE ${business_class.businessTableName} SET <#if business_class.attributes??><#list business_class.attributes as attribute>${attribute.attributeName} = ?<#if attribute_has_next>, </#if></#list></#if> WHERE ${business_class.primaryKey} = ?";
     private static final String SQL_QUERY_SELECTALL = "SELECT ${business_class.primaryKey}<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> FROM ${business_class.businessTableName}";
     private static final String SQL_QUERY_SELECTALL_ID = "SELECT ${business_class.primaryKey} FROM ${business_class.businessTableName}";
     private static final String SQL_QUERY_SELECTALL_BY_IDS = "SELECT ${business_class.primaryKey}<#if business_class.attributes??>, <#list business_class.attributes as attribute>${attribute.attributeName}<#if attribute_has_next>, </#if></#list></#if> FROM ${business_class.businessTableName} WHERE ${business_class.primaryKey} IN (  ";
@@ -165,7 +165,6 @@ public final class ${business_class.businessClass}DAO implements I${business_cla
         {
 	        int nIndex = 1;
 	        
-	        daoUtil.setInt( nIndex++ , ${business_class.instanceName}.getId( ) );
 	        <#list business_class.attributes as attribute>
 	        <#if attribute.type == "File">
 	        if ( ${business_class.instanceName}.get${attribute.name}( ) != null )
