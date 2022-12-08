@@ -49,7 +49,7 @@ public final class ModelDAO implements IModelDAO
     private static final String SQL_QUERY_SELECT = "SELECT id_plugin, name, model_json FROM pluginwizard_plugin_model WHERE id_plugin = ?";
     private static final String SQL_QUERY_INSERT = "INSERT INTO pluginwizard_plugin_model ( id_plugin, name, model_json ) VALUES ( ?, ?, ? ) ";
     private static final String SQL_QUERY_DELETE = "DELETE FROM pluginwizard_plugin_model WHERE id_plugin = ? ";
-    private static final String SQL_QUERY_UPDATE = "UPDATE pluginwizard_plugin_model SET id_plugin = ?, name = ?, model_json = ? WHERE id_plugin = ?";
+    private static final String SQL_QUERY_UPDATE = "UPDATE pluginwizard_plugin_model SET name = ?, model_json = ? WHERE id_plugin = ?";
     private static final String SQL_QUERY_SELECTALL = "SELECT id_plugin, name, model_json FROM pluginwizard_plugin_model";
 
     /**
@@ -167,10 +167,9 @@ public final class ModelDAO implements IModelDAO
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
 
-            daoUtil.setInt( 1, model.getIdPlugin( ) );
-            daoUtil.setString( 2, model.getName( ) );
-            daoUtil.setString( 3, model.getModelJson( ) );
-            daoUtil.setInt( 4, model.getIdPlugin( ) );
+            daoUtil.setString( 1, model.getName( ) );
+            daoUtil.setString( 2, model.getModelJson( ) );
+            daoUtil.setInt( 3, model.getIdPlugin( ) );
 
             daoUtil.executeUpdate( );
             daoUtil.free( );
