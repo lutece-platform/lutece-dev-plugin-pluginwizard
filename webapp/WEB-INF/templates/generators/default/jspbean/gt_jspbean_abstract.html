@@ -49,13 +49,9 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * ${feature_name} JSP Bean abstract class for JSP Bean
- */
-public abstract class Abstract${feature_name}JspBean <S, T> extends MVCAdminJspBean
+
+public abstract class AbstractPaginatorJspBean <S, T> extends MVCAdminJspBean
 {
-    // Rights
-    public static final String RIGHT_${feature_name?upper_case} = "${feature_right}";
     
     // Properties
     private static final String PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE = "${plugin_model.pluginName}.listItems.itemsPerPage";
