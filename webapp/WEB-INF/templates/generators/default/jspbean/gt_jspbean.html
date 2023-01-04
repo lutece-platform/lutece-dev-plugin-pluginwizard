@@ -52,6 +52,7 @@ import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.admin.AccessDeniedException;
 import fr.paris.lutece.portal.service.util.AppException;
+import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.View;
@@ -174,11 +175,11 @@ public class ${business_class.businessClass}JspBean extends AbstractPaginatorJsp
             <#if attribute.type == "File">
 			if ( fil.get${attribute.name}( ) != null )
 			{
-				File file = fileStoreService.getFileMetaData( fil.get${attribute.name}( ).getFileKey( ) );
-				if ( file != null )
+				File localFile = fileStoreService.getFileMetaData( fil.get${attribute.name}( ).getFileKey( ) );
+				if ( localFile != null )
 				{
-					fil.set${attribute.name}( file );
-					String strFileUrl = fileStoreService.getFileDownloadUrlBO( file.getFileKey( ) );
+					fil.set${attribute.name}( localFile );
+					String strFileUrl = fileStoreService.getFileDownloadUrlBO( localFile.getFileKey( ) );
 					fil.get${attribute.name}( ).setUrl( strFileUrl );
 				}
 			}
@@ -191,6 +192,11 @@ public class ${business_class.businessClass}JspBean extends AbstractPaginatorJsp
         return list${business_class.businessClass}.stream()
                  .sorted(Comparator.comparingInt( notif -> listIds.indexOf( notif.getId())))
                  .collect(Collectors.toList());
+	}
+	
+	@Override
+	int getPluginDefaultNumberOfItemPerPage( ) {
+		return AppPropertiesService.getPropertyInt( PROPERTY_DEFAULT_LIST_ITEM_PER_PAGE, 50 );
 	}
     
     /**
@@ -243,9 +249,9 @@ public class ${business_class.businessClass}JspBean extends AbstractPaginatorJsp
             try
             {
                 String strFileStoreKey = fileStoreService.storeFileItem( ${attribute.paramName} );
-                File file = new File( );
-                file.setFileKey( strFileStoreKey );
-                _${business_class.businessClass?lower_case}.set${attribute.name}( file );
+                File localFile = new File( );
+                localFile.setFileKey( strFileStoreKey );
+                _${business_class.businessClass?lower_case}.set${attribute.name}( localFile );
             }
             catch (Exception e) 
             {
@@ -352,11 +358,11 @@ public class ${business_class.businessClass}JspBean extends AbstractPaginatorJsp
         <#if attribute.type == "File">
 		if ( _${business_class.businessClass?lower_case}.get${attribute.name}( ) != null && StringUtils.isNotEmpty( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) ) )
 		{
-			File file = fileStoreService.getFileMetaData( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
-			if ( file != null )
+			File localFile = fileStoreService.getFileMetaData( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
+			if ( localFile != null )
 			{
-				_${business_class.businessClass?lower_case}.set${attribute.name}( file );
-				String strFileUrl = fileStoreService.getFileDownloadUrlBO( file.getFileKey( ) );
+				_${business_class.businessClass?lower_case}.set${attribute.name}( localFile );
+				String strFileUrl = fileStoreService.getFileDownloadUrlBO( localFile.getFileKey( ) );
 				_${business_class.businessClass?lower_case}.get${attribute.name}( ).setUrl( strFileUrl );
 			}
 		}
@@ -397,9 +403,9 @@ public class ${business_class.businessClass}JspBean extends AbstractPaginatorJsp
             {
             	fileStoreService.delete( _${business_class.businessClass?lower_case}.get${attribute.name}( ).getFileKey( ) );
                 String strFileStoreKey = fileStoreService.storeFileItem( ${attribute.paramName} );
-                File file = new File( );
-                file.setFileKey( strFileStoreKey );
-                _${business_class.businessClass?lower_case}.set${attribute.name}( file );
+                File localFile = new File( );
+                localFile.setFileKey( strFileStoreKey );
+                _${business_class.businessClass?lower_case}.set${attribute.name}( localFile );
             }
             catch (Exception e) 
             {
