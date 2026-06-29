@@ -899,5 +899,165 @@
          </list>
       </property>
    </bean>
-
+   
+   <bean id="pluginwizard.generator.lutece8.pom"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.PomGenerator">
+   		<property name="template"
+   		value="/generators/default/xml/gt_xml_pom_file.html" />
+   		<property name="modelVersion" value="4.0.0" />
+   		<property name="globalPomVersion" value="8.0.1" />
+   		<property name="dependencyCoreVersion" value="[8.0.0,)" />
+   		<property name="dependencyRestVersion" value="[3.0.0,3.9.9)" />
+   		<property name="dependencyWorkflowVersion" value="[6.0.3, 6.9.9)" />
+   </bean>
+   
+   <bean id="pluginwizard.business.class_v8" class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+   		<property name="template" value="/generators/default/business/gt_business_class_v8.html" />
+   </bean>
+   <bean id="pluginwizard.business.dao_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+   		<property name="suffix" value="DAO" />
+   		<property name="template" value="/generators/default/business/gt_business_dao_v8.html" />
+   </bean>
+   <bean id="pluginwizard.business.home_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+   		<property name="suffix" value="Home"/>
+   		<property name="template" value="/generators/default/business/gt_business_home_v8.html" />
+   </bean>
+   <bean id="pluginwizard.list.files.business_v8"
+   class="java.util.ArrayList">
+   		<constructor-arg>
+   			<list>
+   				<ref bean="pluginwizard.business.class_v8" />
+   				<ref bean="pluginwizard.business.abstractFilterDao" />
+   				<ref bean="pluginwizard.business.dao_v8" />
+   				<ref bean="pluginwizard.business.idao" />
+   				<ref bean="pluginwizard.business.home_v8" />
+   				<ref bean="pluginwizard.business.test" />
+   			</list>
+   		</constructor-arg>
+   </bean>
+   <bean id="pluginwizard.generator.admin.java.business_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessClassGenerator">
+   		<property name="files">
+   			<ref bean="pluginwizard.list.files.business_v8" />
+   		</property>
+   </bean>
+   
+   <bean id="pluginwizard.generator.admin.java.jspbean_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.AdminJspBeanFileConfig">
+   		<property name="sourcePath" value="src/" />
+   		<property name="template" value="/generators/default/jspbean/gt_jspbean_v8.html" />
+   </bean>
+   <bean id="pluginwizard.list.files.admin.jspbean_v8"
+   class="java.util.ArrayList">
+   		<constructor-arg>
+   			<list>
+   			<ref bean="pluginwizard.generator.admin.java.jspbean_v8" />
+   			<ref bean="pluginwizard.generator.java.jspbean.test" />
+   			</list>
+   		</constructor-arg>
+   </bean>
+   <bean id="pluginwizard.generator.admin.jspbean_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.AdminJspBeanGenerator">
+   		<property name="files">
+   		<ref bean="pluginwizard.list.files.admin.jspbean_v8" />
+   		</property>
+   		<property name="abstractParentBeanTemplate" value="/generators/default/jspbean/gt_jspbean_abstract_v8.html" />
+   </bean>
+   
+   <bean id="pluginwizard.xpage.java_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.XPageFileConfig">
+   		<property name="template" value="/generators/default/xpage/gt_xpage_v8.html" />
+   		<property name="sourcePath" value="src/" />
+   </bean>
+   <bean id="pluginwizard.list.files.xpage_v8"
+   class="java.util.ArrayList">
+   		<constructor-arg>
+   			<list>
+   				<ref bean="pluginwizard.xpage.java_v8" />
+   				<ref bean="pluginwizard.xpage.test" />
+   			</list>
+   		</constructor-arg>
+   </bean>
+   <bean id="pluginwizard.generator.admin.java.xpage_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.XPageGenerator">
+   		<property name="files">
+   			<ref bean="pluginwizard.list.files.xpage_v8" />
+   		</property>
+   </bean>
+   
+   <bean id="pluginwizard.portlet.class_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+   		<property name="template" value="/generators/default/portlet/gt_portlet_class_v8.html" />
+   </bean>
+   <bean id="pluginwizard.portlet.dao_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+   		<property name="suffix" value="DAO" />
+   		<property name="template" value="/generators/default/portlet/gt_portlet_dao_v8.html" />
+   </bean>
+   <bean id="pluginwizard.portlet.home_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.BusinessFileConfig">
+   		<property name="suffix" value="Home" />
+   		<property name="template" value="/generators/default/portlet/gt_portlet_home_v8.html" />
+   </bean>
+   <bean id="pluginwizard.list.files.portlet_v8"
+   class="java.util.ArrayList">
+   		<constructor-arg>
+   			<list>
+   				<ref bean="pluginwizard.portlet.class_v8" />
+   				<ref bean="pluginwizard.portlet.dao_v8" />
+   				<ref bean="pluginwizard.portlet.idao" />
+   				<ref bean="pluginwizard.portlet.home_v8" />
+   			</list>
+   		</constructor-arg>
+   </bean>
+   <bean
+   id="pluginwizard.generator.portlet.java.business_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.PortletGenerator">
+   		<property name="files">
+   			<ref bean="pluginwizard.list.files.portlet_v8" />
+   		</property>
+   </bean>
+   
+   <bean id="pluginwizard.generator.rest.java_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.RestGenerator">
+   		<property name="template" value="/generators/default/rest/gt_rest_v8.html" />
+   </bean>
+   <bean id="pluginwizard.generator.rest.swagger.java_v8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.RestSwaggerGenerator">
+   		<property name="template" value="/generators/default/rest/gt_rest_swagger_v8.html" />
+   </bean>
+   
+   <bean id="schemeLutece8"
+   class="fr.paris.lutece.plugins.pluginwizard.service.generator.GenerationScheme">
+   		<property name="name">
+   			<value>Java Lutece 8.0 (DAO SQL) </value>
+   		</property>
+   		<property name="generatorsList">
+   			<list>
+   				<ref bean="pluginwizard.generator.lutece8.pom" />
+	            <ref bean="pluginwizard.generator.pluginXml" />
+	            <ref bean="pluginwizard.generator.properties" />
+	            <ref bean="pluginwizard.generator.site" />
+	            <ref bean="pluginwizard.generator.resources" />
+	            <ref bean="pluginwizard.generator.sql" />
+	            <ref bean="pluginwizard.generator.admin.java.business_v8" />
+	            <ref bean="pluginwizard.generator.admin.jspbean_v8" />
+	            <ref bean="pluginwizard.generator.admin.jsp" />
+	            <ref bean="pluginwizard.generator.admin.html" />
+	            <ref bean="pluginwizard.generator.admin.java.xpage_v8" />
+	            <ref bean="pluginwizard.generator.xpage.html" />
+	            <ref bean="pluginwizard.generator.portlet.java.business_v8" />
+	            <ref bean="pluginwizard.generator.portlet.jsp" />
+	            <ref bean="pluginwizard.generator.portlet.html" />
+	            <ref bean="pluginwizard.generator.portlet.xsl" />
+	            <ref bean="pluginwizard.generator.rest.java_v8" />
+	            <ref bean="pluginwizard.generator.rest.constants.java" />
+	            <ref bean="pluginwizard.generator.rest.swagger.java_v8" />
+	            <ref bean="pluginwizard.generator.rest.swagger.json" />
+ 			</list>
+   		</property>
+   </bean>
+   
 </beans>
